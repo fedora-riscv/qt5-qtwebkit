@@ -4,7 +4,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.0.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -21,8 +21,8 @@ Patch3: qtwebkit-opensource-src-5.0.1-debuginfo.patch
 # tweak linker flags to minimize memory usage on "small" platforms
 Patch4: qtwebkit-2.3-save_memory.patch
 
-# try to use unbundled system angleproject library
-%define system_angle 1
+# use unbundled system angleproject library
+#define system_angle 1
 Patch5: qtwebkit-opensource-src-5.0.2-system_angle.patch
 # Fix compilation against latest ANGLE
 # https://bugs.webkit.org/show_bug.cgi?id=109127
@@ -166,6 +166,9 @@ popd
 
 
 %changelog
+* Fri Aug 02 2013 Rex Dieter <rdieter@fedoraproject.org> 5.0.2-7
+- use bundled angleproject (until system version passes review)
+
 * Fri Jun 21 2013 Rex Dieter <rdieter@fedoraproject.org> 5.0.2-6
 - %%doc ChangeLog VERSION
 - %%doc Source/WebCore/LICENSE*
