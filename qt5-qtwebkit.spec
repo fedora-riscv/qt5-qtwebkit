@@ -4,13 +4,16 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.0.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 Source0: http://releases.qt-project.org/qt5/%{version}%{?pre:-%{pre}}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+
+# qt5-qtjsbackend (and qtdeclarative) supports only ix86, x86_64 and arm , and so do we here
+ExclusiveArch: %{ix86} x86_64 %{arm}
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: webkit-qtwebkit-2.2-tp1-pluginpath.patch
@@ -166,6 +169,9 @@ popd
 
 
 %changelog
+* Tue Aug 20 2013 Rex Dieter <rdieter@fedoraproject.org> 5.0.2-8
+- qt5-qtjsbackend only supports ix86, x86_64 and arm
+
 * Fri Aug 02 2013 Rex Dieter <rdieter@fedoraproject.org> 5.0.2-7
 - use bundled angleproject (until system version passes review)
 
