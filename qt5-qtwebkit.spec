@@ -3,14 +3,14 @@
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.0.2
-Release: 8%{?dist}
+Version: 5.1.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
-Source0: http://releases.qt-project.org/qt5/%{version}%{?pre:-%{pre}}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.1/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 
 # qt5-qtjsbackend (and qtdeclarative) supports only ix86, x86_64 and arm , and so do we here
 ExclusiveArch: %{ix86} x86_64 %{arm}
@@ -22,10 +22,11 @@ Patch1: webkit-qtwebkit-2.2-tp1-pluginpath.patch
 Patch3: qtwebkit-opensource-src-5.0.1-debuginfo.patch
 
 # tweak linker flags to minimize memory usage on "small" platforms
-Patch4: qtwebkit-2.3-save_memory.patch
+Patch4: qtwebkit-save_memory.patch
 
 # use unbundled system angleproject library
 #define system_angle 1
+# NEEDS REBASE for 5.1 -- rex
 Patch5: qtwebkit-opensource-src-5.0.2-system_angle.patch
 # Fix compilation against latest ANGLE
 # https://bugs.webkit.org/show_bug.cgi?id=109127
@@ -33,15 +34,6 @@ Patch6: webkit-commit-142567.patch
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
 %endif
-
-# Prevent flooding the logs with warnings about COMPILE_ASSERT
-# https://bugs.webkit.org/show_bug.cgi?id=113147
-# Based on upstream commit r147640
-Patch7:         webkit-commit-147640.patch
-
-# Prevent flooding the logs with warnings about HashMap
-# https://bugs.webkit.org/show_bug.cgi?id=113454
-Patch9:         webkit-commit-147345.patch
 
 
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -93,12 +85,9 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %patch3 -p1 -b .debuginfo
 %patch4 -p1 -b .save_memory
 %if 0%{?system_angle}
-%patch5 -p1 -b .system_angle
+#patch5 -p1 -b .system_angle
 %patch6 -p1 -b .svn142567
 %endif
-
-%patch7 -p1 -b .svn147640
-%patch9 -p1 -b .svn147345
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -169,6 +158,9 @@ popd
 
 
 %changelog
+* Wed Aug 28 2013 Rex Dieter <rdieter@fedoraproject.org> 5.1.1-1
+- 5.1.1
+
 * Tue Aug 20 2013 Rex Dieter <rdieter@fedoraproject.org> 5.0.2-8
 - qt5-qtjsbackend only supports ix86, x86_64 and arm
 
