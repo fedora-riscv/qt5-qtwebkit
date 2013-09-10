@@ -52,12 +52,12 @@ BuildRequires: pkgconfig(gl)
 BuildRequires: pkgconfig(gstreamer-0.10) pkgconfig(gstreamer-app-0.10)
 %if 0%{?fedora} || 0%{?rhel} > 6
 BuildRequires: pkgconfig(icu-i18n)
+BuildRequires: pkgconfig(libwebp)
 %else
 BuildRequires: libicu-devel
 %endif
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(libpcre)
-BuildRequires: pkgconfig(libwebp)
 BuildRequires: pkgconfig(libxslt)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
