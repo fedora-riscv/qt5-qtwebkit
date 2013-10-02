@@ -1,7 +1,7 @@
-diff -up qtwebkit-opensource-src-5.1.1/Source/WebCore/WebCore.pri.save_memory qtwebkit-opensource-src-5.1.1/Source/WebCore/WebCore.pri
---- qtwebkit-opensource-src-5.1.1/Source/WebCore/WebCore.pri.save_memory	2013-08-28 11:11:19.218230963 -0500
-+++ qtwebkit-opensource-src-5.1.1/Source/WebCore/WebCore.pri	2013-08-28 11:12:34.855410992 -0500
-@@ -296,6 +296,8 @@ mac {
+diff -up qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri.save_memory qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri
+--- qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri.save_memory	2013-10-01 22:26:15.648285154 -0500
++++ qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri	2013-10-01 22:27:41.299383226 -0500
+@@ -304,6 +304,8 @@ mac {
  }
  unix:!mac:*-g++*:QMAKE_CXXFLAGS += -fdata-sections
  unix:!mac:*-g++*:QMAKE_LFLAGS += -Wl,--gc-sections
@@ -9,4 +9,4 @@ diff -up qtwebkit-opensource-src-5.1.1/Source/WebCore/WebCore.pri.save_memory qt
 +unix:!mac:*-g++*:!equals(QT_ARCH, powerpc):!equals(QT_ARCH, s390):!equals(QT_ARCH, mips):!equals(QT_ARCH, arm):QMAKE_LFLAGS += -Wl,--reduce-memory-overheads
  linux*-g++*:QMAKE_LFLAGS += $$QMAKE_LFLAGS_NOUNDEF
  
- contains(DEFINES, ENABLE_OPENCL=1) {
+ enable_fast_mobile_scrolling: DEFINES += ENABLE_FAST_MOBILE_SCROLLING=1

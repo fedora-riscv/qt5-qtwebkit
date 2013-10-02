@@ -1,19 +1,28 @@
 
 %global qt_module qtwebkit
+%define pre alpha
+
+# define to build docs, need to undef this for bootstrapping
+# where qt5-qttools builds are not yet available
+%define docs 1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.1.1
-Release: 1%{?dist}
+Version: 5.2.0
+Release: 0.1.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
-Source0: http://download.qt-project.org/official_releases/qt/5.1/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+%if 0%{?pre:1}
+Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+%else
+Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+%endif
 
-# qt5-qtjsbackend (and qtdeclarative) supports only ix86, x86_64 and arm , and so do we here
-ExclusiveArch: %{ix86} x86_64 %{arm}
+# http://bugzilla.redhat.com/1005482
+ExcludeArch: ppc64 ppc
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: webkit-qtwebkit-2.2-tp1-pluginpath.patch
@@ -35,7 +44,6 @@ Patch6: webkit-commit-142567.patch
 BuildRequires: angleproject-devel angleproject-static
 %endif
 
-
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
 
@@ -43,17 +51,18 @@ BuildRequires: bison
 BuildRequires: chrpath
 BuildRequires: flex
 BuildRequires: gperf
-BuildRequires: libicu-devel
 BuildRequires: libjpeg-devel
 BuildRequires: pkgconfig(gio-2.0) pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(fontconfig)
 BuildRequires: pkgconfig(gl)
-# gstreamer media support
-BuildRequires: pkgconfig(gstreamer-0.10) pkgconfig(gstreamer-app-0.10)
 %if 0%{?fedora} || 0%{?rhel} > 6
+# gstreamer media support
+BuildRequires: pkgconfig(gstreamer-1.0) pkgconfig(gstreamer-app-1.0)
 BuildRequires: pkgconfig(icu-i18n)
 BuildRequires: pkgconfig(libwebp)
 %else
+# gstreamer media support
+BuildRequires: pkgconfig(gstreamer-0.10) pkgconfig(gstreamer-app-0.10)
 BuildRequires: libicu-devel
 %endif
 BuildRequires: pkgconfig(libpng)
@@ -81,6 +90,17 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %description devel
 %{summary}.
 
+%if 0%{?docs}
+%package doc
+Summary: API documentation for %{name}
+Requires: %{name} = %{version}-%{release}
+# for qhelpgenerator
+BuildRequires: qt5-qttools-devel
+BuildArch: noarch
+%description doc
+%{summary}.
+%endif
+
 
 %prep
 %setup -q -n qtwebkit-opensource-src-%{version}%{?pre:-%{pre}}
@@ -96,7 +116,7 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 echo "nuke bundled code..."
 # nuke bundled code
 mkdir Source/ThirdParty/orig
-mv Source/ThirdParty/{glu/,gtest/,gyp/,mt19937ar.c,qunit/} \
+mv Source/ThirdParty/{gtest/,qunit/} \
    Source/ThirdParty/orig/
 
 %if 0%{?system_angle}
@@ -110,10 +130,17 @@ mv Source/ThirdParty/ANGLE/ \
 
 make %{?_smp_mflags}
 
+%if 0%{?docs}
+make %{?_smp_mflags} docs
+%endif
+
 
 %install
-
 make install INSTALL_ROOT=%{buildroot}
+
+%if 0%{?docs}
+make install_docs INSTALL_ROOT=%{buildroot}
+%endif
 
 ## .prl file love (maybe consider just deleting these -- rex
 # nuke dangling reference(s) to %%buildroot, excessive (.la-like) libs
@@ -145,7 +172,7 @@ popd
 
 %files
 %doc Source/WebCore/LICENSE*
-%doc ChangeLog VERSION
+%doc ChangeLog* VERSION
 %{_qt5_libdir}/libQt5WebKit.so.5*
 %{_qt5_libdir}/libQt5WebKitWidgets.so.5*
 %{_qt5_libexecdir}/QtWebPluginProcess
@@ -160,8 +187,19 @@ popd
 %{_qt5_libdir}/pkgconfig/Qt5*.pc
 %{_qt5_archdatadir}/mkspecs/modules/*.pri
 
+%if 0%{?docs}
+%files doc
+%{_qt5_docdir}/qtwebkit.qch
+%{_qt5_docdir}/qtwebkit/
+%endif
+
 
 %changelog
+* Wed Oct 02 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-0.1.alpha
+- 5.2.0-alpha
+- -doc subpkg
+- use gstreamer1 (where available)
+
 * Wed Aug 28 2013 Rex Dieter <rdieter@fedoraproject.org> 5.1.1-1
 - 5.1.1
 
