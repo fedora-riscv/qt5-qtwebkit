@@ -4,12 +4,12 @@
 
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
-%define docs 1
+#define docs 1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.0
-Release: 0.1.%{pre}%{?dist}
+Release: 0.2.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -20,9 +20,6 @@ Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%
 %else
 Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
-
-# http://bugzilla.redhat.com/1005482
-ExcludeArch: ppc64 ppc
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: webkit-qtwebkit-2.2-tp1-pluginpath.patch
@@ -195,6 +192,9 @@ popd
 
 
 %changelog
+* Wed Oct 16 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-0.2.alpha
+- bootstrap ppc
+
 * Wed Oct 02 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-0.1.alpha
 - 5.2.0-alpha
 - -doc subpkg
