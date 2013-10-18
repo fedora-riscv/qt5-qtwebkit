@@ -67,7 +67,7 @@ BuildRequires: pkgconfig(libpcre)
 BuildRequires: pkgconfig(libxslt)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
-BuildRequires: perl perl(version) perl(Digest::MD5)
+BuildRequires: perl perl(version) perl(Digest::MD5) perl(Text::ParseWords)
 BuildRequires: ruby
 BuildRequires: zlib-devel
 
