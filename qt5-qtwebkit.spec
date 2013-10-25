@@ -64,6 +64,7 @@ BuildRequires: libicu-devel
 %endif
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(libpcre)
+BuildRequires: pkgconfig(libudev)
 BuildRequires: pkgconfig(libxslt)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
