@@ -12,7 +12,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.0
-Release: 0.5.%{pre}%{?dist}
+Release: 0.6.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -43,6 +43,10 @@ Patch6: webkit-commit-142567.patch
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
 %endif
+
+# fix build with JIT disabled
+# https://bugzilla.redhat.com/show_bug.cgi?id=1034940
+Patch10: qtwebkit-opensource-src-5.2.0-beta1-nojit.patch
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
@@ -113,6 +117,7 @@ BuildArch: noarch
 #patch5 -p1 -b .system_angle
 %patch6 -p1 -b .svn142567
 %endif
+%patch10 -p1 -b .nojit
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -127,7 +132,12 @@ mv Source/ThirdParty/ANGLE/ \
 
 
 %build
-%{_qt5_qmake} %{?system_angle:DEFINES+=USE_SYSTEM_ANGLE=1}
+%{_qt5_qmake} %{?system_angle:DEFINES+=USE_SYSTEM_ANGLE=1} \
+%ifnarch %{arm} %{ix86} x86_64
+	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
+%else
+	%{nil}
+%endif
 
 make %{?_smp_mflags}
 
@@ -196,6 +206,9 @@ popd
 
 
 %changelog
+* Thu Nov 28 2013 Dan Horák <dan[at]danny.cz> 5.2.0-0.6.beta1
+- disable JIT on secondary arches, fix build with JIT disabled (#1034940)
+
 * Mon Nov 25 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-0.5.beta1
 - enable -doc only on primary archs (allow secondary bootstrap)
 
