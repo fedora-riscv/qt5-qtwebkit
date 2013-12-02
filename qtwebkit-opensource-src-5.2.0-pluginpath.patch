@@ -1,7 +1,7 @@
-diff -up webkit-qtwebkit/Source/WebCore/plugins/PluginDatabase.cpp.orig webkit-qtwebkit/Source/WebCore/plugins/PluginDatabase.cpp
---- webkit-qtwebkit/Source/WebCore/plugins/PluginDatabase.cpp.orig	2011-05-12 10:06:43.000000000 +0200
-+++ webkit-qtwebkit/Source/WebCore/plugins/PluginDatabase.cpp	2011-05-12 10:08:08.000000000 +0200
-@@ -380,6 +380,7 @@ Vector<String> PluginDatabase::defaultPl
+diff -up qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/plugins/PluginDatabase.cpp.pluginpath qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/plugins/PluginDatabase.cpp
+--- qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/plugins/PluginDatabase.cpp.pluginpath	2013-11-26 19:01:47.000000000 -0600
++++ qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/plugins/PluginDatabase.cpp	2013-12-02 11:14:43.306114402 -0600
+@@ -407,6 +407,7 @@ Vector<String> PluginDatabase::defaultPl
      paths.append("/usr/lib/firefox/plugins");
      paths.append("/usr/lib64/browser-plugins");
      paths.append("/usr/lib/browser-plugins");
@@ -9,7 +9,7 @@ diff -up webkit-qtwebkit/Source/WebCore/plugins/PluginDatabase.cpp.orig webkit-q
      paths.append("/usr/lib/mozilla/plugins");
      paths.append("/usr/local/netscape/plugins");
      paths.append("/opt/mozilla/plugins");
-@@ -389,6 +390,7 @@ Vector<String> PluginDatabase::defaultPl
+@@ -416,6 +417,7 @@ Vector<String> PluginDatabase::defaultPl
      paths.append("/usr/lib/netscape/plugins");
      paths.append("/usr/lib/netscape/plugins-libc5");
      paths.append("/usr/lib/netscape/plugins-libc6");

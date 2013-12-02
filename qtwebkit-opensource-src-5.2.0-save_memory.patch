@@ -1,7 +1,7 @@
-diff -up qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri.save_memory qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri
---- qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri.save_memory	2013-10-01 22:26:15.648285154 -0500
-+++ qtwebkit-opensource-src-5.2.0-alpha/Source/WebCore/WebCore.pri	2013-10-01 22:27:41.299383226 -0500
-@@ -304,6 +304,8 @@ mac {
+diff -up qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/WebCore.pri.save_memory qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/WebCore.pri
+--- qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/WebCore.pri.save_memory	2013-12-02 11:15:56.417351604 -0600
++++ qtwebkit-opensource-src-5.2.0-rc1/Source/WebCore/WebCore.pri	2013-12-02 11:15:56.421351563 -0600
+@@ -306,6 +306,8 @@ mac {
  }
  unix:!mac:*-g++*:QMAKE_CXXFLAGS += -fdata-sections
  unix:!mac:*-g++*:QMAKE_LFLAGS += -Wl,--gc-sections

@@ -1,6 +1,6 @@
 
 %global qt_module qtwebkit
-%define pre beta1
+%define pre rc1
 
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
@@ -12,7 +12,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.0
-Release: 0.6.%{pre}%{?dist}
+Release: 0.10.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -25,13 +25,13 @@ Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/subm
 %endif
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
-Patch1: webkit-qtwebkit-2.2-tp1-pluginpath.patch
+Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
 
 # smaller debuginfo s/-g/-g1/ (debian uses -gstabs) to avoid 4gb size limit
 Patch3: qtwebkit-opensource-src-5.0.1-debuginfo.patch
 
 # tweak linker flags to minimize memory usage on "small" platforms
-Patch4: qtwebkit-save_memory.patch
+Patch4: qtwebkit-opensource-src-5.2.0-save_memory.patch
 
 # use unbundled system angleproject library
 #define system_angle 1
@@ -206,6 +206,9 @@ popd
 
 
 %changelog
+* Mon Dec 02 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-0.10.rc1
+- 5.2.0-rc1
+
 * Thu Nov 28 2013 Dan Horák <dan[at]danny.cz> 5.2.0-0.6.beta1
 - disable JIT on secondary arches, fix build with JIT disabled (#1034940)
 
