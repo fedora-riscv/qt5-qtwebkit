@@ -1,6 +1,5 @@
 
 %global qt_module qtwebkit
-%define pre rc1
 
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
@@ -12,7 +11,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.0
-Release: 0.10.%{pre}%{?dist}
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -206,6 +205,9 @@ popd
 
 
 %changelog
+* Thu Dec 12 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-1
+- 5.2.0
+
 * Mon Dec 02 2013 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-0.10.rc1
 - 5.2.0-rc1
 
