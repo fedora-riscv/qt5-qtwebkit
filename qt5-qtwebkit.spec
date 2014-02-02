@@ -11,7 +11,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -39,6 +39,10 @@ Patch5: qtwebkit-opensource-src-5.0.2-system_angle.patch
 # Fix compilation against latest ANGLE
 # https://bugs.webkit.org/show_bug.cgi?id=109127
 Patch6: webkit-commit-142567.patch
+
+# Add AArch64 support
+Patch7: 0001-Add-ARM-64-support.patch
+
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
 %endif
@@ -116,6 +120,7 @@ BuildArch: noarch
 #patch5 -p1 -b .system_angle
 %patch6 -p1 -b .svn142567
 %endif
+%patch7 -p1 -b .aarch64
 %patch10 -p1 -b .nojit
 
 echo "nuke bundled code..."
@@ -205,6 +210,9 @@ popd
 
 
 %changelog
+* Sun Feb 02 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-3
+- Add AArch64 support to qtwebkit (#1056160)
+
 * Wed Jan 01 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-2
 - rebuild (libwebp)
 
