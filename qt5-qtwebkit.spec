@@ -10,8 +10,8 @@
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.2.0
-Release: 3%{?dist}
+Version: 5.2.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -210,6 +210,9 @@ popd
 
 
 %changelog
+* Wed Feb 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-1
+- 5.2.1
+
 * Sun Feb 02 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.0-3
 - Add AArch64 support to qtwebkit (#1056160)
 
