@@ -11,7 +11,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -43,6 +43,9 @@ Patch6: webkit-commit-142567.patch
 # Add AArch64 support
 Patch7: 0001-Add-ARM-64-support.patch
 
+# truly madly deeply no rpath please, kthxbye
+Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
+
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
 %endif
@@ -53,9 +56,10 @@ Patch10: qtwebkit-opensource-src-5.2.0-beta1-nojit.patch
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
+BuildRequires: qt5-qtlocation-devel
+BuildRequires: qt5-qtsensors-devel
 
 BuildRequires: bison
-BuildRequires: chrpath
 BuildRequires: flex
 BuildRequires: gperf
 BuildRequires: libjpeg-devel
@@ -121,6 +125,7 @@ BuildArch: noarch
 %patch6 -p1 -b .svn142567
 %endif
 %patch7 -p1 -b .aarch64
+%patch8 -p1 -b .no_rpath
 %patch10 -p1 -b .nojit
 
 echo "nuke bundled code..."
@@ -168,19 +173,6 @@ sed -i \
 # .la files, die, die, die.
 rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 
-## kill rpath's
-pushd %{buildroot}
-for remove_rpath in \
-  %{_qt5_libexecdir}/QtWebPluginProcess \
-  %{_qt5_libexecdir}/QtWebProcess \
-  %{_qt5_archdatadir}/qml/QtWebKit/libqmlwebkitplugin.so \
-  %{_qt5_archdatadir}/qml/QtWebKit/experimental/libqmlwebkitexperimentalplugin.so \
-; do
-chrpath --list   %{buildroot}$remove_rpath
-chrpath --delete %{buildroot}$remove_rpath
-done
-popd
-
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -210,6 +202,11 @@ popd
 
 
 %changelog
+* Fri May 02 2014 Rex Dieter <rdieter@fedoraproject.org> 
+- 5.2.1-3
+- no rpath, drop chrpath hacks
+- BR: qt5-qtlocation qt5-qtsensors
+
 * Wed Feb 12 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-2
 - rebuild (libicu)
 
