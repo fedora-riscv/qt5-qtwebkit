@@ -11,7 +11,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.2.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -162,16 +162,17 @@ make install INSTALL_ROOT=%{buildroot}
 make install_docs INSTALL_ROOT=%{buildroot}
 %endif
 
-## .prl file love (maybe consider just deleting these -- rex
-# nuke dangling reference(s) to %%buildroot, excessive (.la-like) libs
-sed -i \
-  -e "/^QMAKE_PRL_BUILD_DIR/d" \
-  -e "/^QMAKE_PRL_LIBS/d" \
-  %{buildroot}%{_qt5_libdir}/*.prl
-
-## unpackaged files
-# .la files, die, die, die.
-rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
+## .prl/.la file love
+# nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
+pushd %{buildroot}%{_qt5_libdir}
+for prl_file in libQt5*.prl ; do
+  sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
+  if [ -f "$(basename ${prl_file} .prl).so" ]; then
+    rm -fv "$(basename ${prl_file} .prl).la"
+    sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
+  fi
+done
+popd
 
 
 %post -p /sbin/ldconfig
@@ -202,8 +203,10 @@ rm -fv %{buildroot}%{_qt5_libdir}/lib*.la
 
 
 %changelog
-* Fri May 02 2014 Rex Dieter <rdieter@fedoraproject.org> 
-- 5.2.1-3
+* Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-4
+- use standard (same as qtbase) .prl sanitation
+
+* Fri May 02 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-3
 - no rpath, drop chrpath hacks
 - BR: qt5-qtlocation qt5-qtsensors
 
