@@ -10,17 +10,17 @@
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.2.1
-Release: 4%{?dist}
+Version: 5.3.0
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.2/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.2/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
@@ -49,10 +49,6 @@ Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
 %endif
-
-# fix build with JIT disabled
-# https://bugzilla.redhat.com/show_bug.cgi?id=1034940
-Patch10: qtwebkit-opensource-src-5.2.0-beta1-nojit.patch
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
@@ -126,7 +122,6 @@ BuildArch: noarch
 %endif
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
-%patch10 -p1 -b .nojit
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -203,6 +198,9 @@ popd
 
 
 %changelog
+* Wed May 21 2014 Jan Grulich <jgrulich@redhat.com> 5.3.0-1
+- 5.3.0
+
 * Mon May 05 2014 Rex Dieter <rdieter@fedoraproject.org> 5.2.1-4
 - use standard (same as qtbase) .prl sanitation
 
