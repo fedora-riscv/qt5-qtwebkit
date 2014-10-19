@@ -8,19 +8,21 @@
 %define docs 1
 %endif
 
+%define pre beta
+
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.3.2
-Release: 1%{?dist}
+Version: 5.4.0
+Release: 0.1.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://qt-project.org/
 %if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.3/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
+Source0: http://download.qt-project.org/development_releases/qt/5.4/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
 %else
-Source0: http://download.qt-project.org/official_releases/qt/5.3/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt-project.org/official_releases/qt/5.4/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
@@ -34,7 +36,7 @@ Patch4: qtwebkit-opensource-src-5.2.0-save_memory.patch
 
 # use unbundled system angleproject library
 #define system_angle 1
-# NEEDS REBASE for 5.1 -- rex
+# NEEDS REBASE -- rex
 Patch5: qtwebkit-opensource-src-5.0.2-system_angle.patch
 # Fix compilation against latest ANGLE
 # https://bugs.webkit.org/show_bug.cgi?id=109127
@@ -198,6 +200,9 @@ popd
 
 
 %changelog
+* Sat Oct 18 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.1.beta
+- 5.4.0-beta
+
 * Tue Sep 16 2014 Rex Dieter <rdieter@fedoraproject.org> 5.3.2-1
 - 5.3.2
 
