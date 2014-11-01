@@ -1,6 +1,8 @@
 
 %global qt_module qtwebkit
 
+%global _hardened_build 1
+
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
@@ -13,7 +15,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.0
-Release: 0.1.%{pre}%{?dist}
+Release: 0.2.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -24,6 +26,8 @@ Source0: http://download.qt-project.org/development_releases/qt/5.4/%{version}-%
 %else
 Source0: http://download.qt-project.org/official_releases/qt/5.4/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
+# qmake wrapper
+Source1:  qmake.sh
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -125,6 +129,8 @@ BuildArch: noarch
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
 
+install -m755 -D %{SOURCE1} bin/qmake
+
 echo "nuke bundled code..."
 # nuke bundled code
 mkdir Source/ThirdParty/orig
@@ -138,22 +144,31 @@ mv Source/ThirdParty/ANGLE/ \
 
 
 %build
+
+CFLAGS="%{optflags}"; export CFLAGS
+CXXFLAGS="%{optflags}"; export CXXFLAGS
+LDFLAGS="%{?__global_ldflags}"; export LDFLAGS
+PATH=`pwd`/bin:%{_qt5_bindir}:$PATH; export PATH
+
+mkdir %{_target_platform}
+pushd %{_target_platform}
+
 %{_qt5_qmake} %{?system_angle:DEFINES+=USE_SYSTEM_ANGLE=1} \
 %ifnarch %{arm} %{ix86} x86_64
 	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
-%else
-	%{nil}
 %endif
+	..
 
 make %{?_smp_mflags}
 
 %if 0%{?docs}
 make %{?_smp_mflags} docs
 %endif
+popd
 
 
 %install
-make install INSTALL_ROOT=%{buildroot}
+make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
 
 %if 0%{?docs}
 make install_docs INSTALL_ROOT=%{buildroot}
@@ -200,6 +215,9 @@ popd
 
 
 %changelog
+* Sat Nov 01 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.2.beta
+- enable hardened build, out-of-src tree build
+
 * Sat Oct 18 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.1.beta
 - 5.4.0-beta
 
