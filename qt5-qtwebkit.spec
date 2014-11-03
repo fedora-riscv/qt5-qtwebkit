@@ -15,7 +15,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.0
-Release: 0.2.%{pre}%{?dist}
+Release: 0.3.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -26,8 +26,6 @@ Source0: http://download.qt-project.org/development_releases/qt/5.4/%{version}-%
 %else
 Source0: http://download.qt-project.org/official_releases/qt/5.4/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
 %endif
-# qmake wrapper
-Source1:  qmake.sh
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -129,8 +127,6 @@ BuildArch: noarch
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
 
-install -m755 -D %{SOURCE1} bin/qmake
-
 echo "nuke bundled code..."
 # nuke bundled code
 mkdir Source/ThirdParty/orig
@@ -144,20 +140,14 @@ mv Source/ThirdParty/ANGLE/ \
 
 
 %build
-
-CFLAGS="%{optflags}"; export CFLAGS
-CXXFLAGS="%{optflags}"; export CXXFLAGS
-LDFLAGS="%{?__global_ldflags}"; export LDFLAGS
-PATH=`pwd`/bin:%{_qt5_bindir}:$PATH; export PATH
-
 mkdir %{_target_platform}
 pushd %{_target_platform}
 
-%{_qt5_qmake} %{?system_angle:DEFINES+=USE_SYSTEM_ANGLE=1} \
+%{qmake_qt5} .. \
+	%{?system_angle:DEFINES+=USE_SYSTEM_ANGLE=1} \
 %ifnarch %{arm} %{ix86} x86_64
 	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
 %endif
-	..
 
 make %{?_smp_mflags}
 
@@ -215,6 +205,9 @@ popd
 
 
 %changelog
+* Mon Nov 03 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.3.beta
+- fix hardening, use new %%qmake_qt5 macro
+
 * Sat Nov 01 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.2.beta
 - enable hardened build, out-of-src tree build
 
