@@ -15,7 +15,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.0
-Release: 0.3.%{pre}%{?dist}
+Release: 0.4.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -62,23 +62,23 @@ BuildRequires: qt5-qtsensors-devel
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: gperf
+BuildRequires: libicu-devel
 BuildRequires: libjpeg-devel
 BuildRequires: pkgconfig(gio-2.0) pkgconfig(glib-2.0)
 BuildRequires: pkgconfig(fontconfig)
 BuildRequires: pkgconfig(gl)
-%if 0%{?fedora} || 0%{?rhel} > 6
 # gstreamer media support
+%if 0%{?fedora} > 20 || 0%{?rhel} > 7
 BuildRequires: pkgconfig(gstreamer-1.0) pkgconfig(gstreamer-app-1.0)
-BuildRequires: pkgconfig(icu-i18n)
-BuildRequires: pkgconfig(libwebp)
 %else
-# gstreamer media support
 BuildRequires: pkgconfig(gstreamer-0.10) pkgconfig(gstreamer-app-0.10)
-BuildRequires: libicu-devel
 %endif
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(libpcre)
 BuildRequires: pkgconfig(libudev)
+%if 0%{?fedora} || 0%{?rhel} > 6
+BuildRequires: pkgconfig(libwebp)
+%endif
 BuildRequires: pkgconfig(libxslt)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
@@ -205,6 +205,9 @@ popd
 
 
 %changelog
+* Tue Nov 18 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.4.beta
+- use gst1 only fc21+ (and el8+) only
+
 * Mon Nov 03 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.3.beta
 - fix hardening, use new %%qmake_qt5 macro
 
