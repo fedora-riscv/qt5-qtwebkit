@@ -10,12 +10,12 @@
 %define docs 1
 %endif
 
-%define pre beta
+%define pre rc
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.0
-Release: 0.4.%{pre}%{?dist}
+Release: 0.5.%{pre}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -205,6 +205,9 @@ popd
 
 
 %changelog
+* Fri Nov 28 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.5.rc
+- 5.4.0-rc
+
 * Tue Nov 18 2014 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-0.4.beta
 - use gst1 only fc21+ (and el8+) only
 
