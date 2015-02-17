@@ -13,7 +13,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -203,6 +203,9 @@ popd
 
 
 %changelog
+* Tue Feb 17 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-3
+- rebuild (gcc5)
+
 * Mon Jan 26 2015 David Tardon <dtardon@redhat.com> - 5.4.0-2
 - rebuild for ICU 54.1
 
