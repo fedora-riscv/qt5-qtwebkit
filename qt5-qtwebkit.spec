@@ -13,7 +13,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -47,6 +47,9 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
+
+# fix GMutexLocker build issue
+Patch9: qtwebkit-opensource-src-5.4.0-mutexlocker.patch
 
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
@@ -124,6 +127,7 @@ BuildArch: noarch
 %endif
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
+%patch9 -p1 -b .MutexLocker
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -203,6 +207,9 @@ popd
 
 
 %changelog
+* Tue Feb 17 2015 Than Ngo <than@redhat.com> 5.4.0-4
+- fix GMutexLocker build problem
+
 * Tue Feb 17 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.0-3
 - rebuild (gcc5)
 
