@@ -12,8 +12,8 @@
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.4.0
-Release: 4%{?dist}
+Version: 5.4.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -207,6 +207,9 @@ popd
 
 
 %changelog
+* Tue Feb 24 2015 Jan Grulich <jgrulich@redhat.com> 5.4.1-1
+- 5.4.1
+
 * Tue Feb 17 2015 Than Ngo <than@redhat.com> 5.4.0-4
 - fix GMutexLocker build problem
 
