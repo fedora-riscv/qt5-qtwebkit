@@ -151,7 +151,8 @@ pushd %{_target_platform}
 	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
 %endif
 
-make %{?_smp_mflags}
+# make %{?_smp_mflags}
+make -j2
 
 %if 0%{?docs}
 make %{?_smp_mflags} docs
