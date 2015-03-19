@@ -155,7 +155,9 @@ pushd %{_target_platform}
 	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
 %endif
 
-make %{?_smp_mflags}
+# workaround, disable parallel compilation as it fails to compile in brew
+# make %{?_smp_mflags}
+make -j2
 
 %if 0%{?docs}
 make %{?_smp_mflags} docs
