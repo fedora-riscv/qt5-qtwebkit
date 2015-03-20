@@ -52,7 +52,7 @@ Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 Patch9: qtwebkit-opensource-src-5.4.0-mutexlocker.patch
 
 # fix gcc5 template issue
-Patch10: qt5-qtwebkit-gcc5-patch
+Patch10: qt5-qtwebkit-gcc5.patch
 
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
