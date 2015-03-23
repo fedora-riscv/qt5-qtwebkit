@@ -13,7 +13,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -53,6 +53,10 @@ Patch9: qtwebkit-opensource-src-5.4.0-mutexlocker.patch
 
 # fix gcc5 template issue
 Patch10: qt5-qtwebkit-gcc5.patch
+
+# https://bugzilla.redhat.com/show_bug.cgi?id=1204795
+# https://codereview.qt-project.org/#/c/108936/
+Patch11: qtwebkit-opensource-src-5.4.1-private_browsing.patch
 
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
@@ -132,6 +136,7 @@ BuildArch: noarch
 %patch8 -p1 -b .no_rpath
 %patch9 -p1 -b .MutexLocker
 %patch10 -p1 -b .gcc5-template
+%patch11 -p1 -b .private_browsing
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -213,6 +218,9 @@ popd
 
 
 %changelog
+* Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.1-4
+- QtWebKit logs visited URLs to WebpageIcons.db in private browsing mode (#1204795,#1204798)
+
 * Wed Mar 18 2015 Than Ngo <than@redhat.com> - 5.4.1-3
 - fix build failure with new gcc5
 
