@@ -13,7 +13,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.4.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -113,7 +113,6 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
-Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
@@ -218,6 +217,9 @@ popd
 
 
 %changelog
+* Fri Apr 03 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.1-5
+- -doc: drop dep on main pkg, not strictly required
+
 * Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.1-4
 - QtWebKit logs visited URLs to WebpageIcons.db in private browsing mode (#1204795,#1204798)
 
