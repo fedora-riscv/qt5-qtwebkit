@@ -12,8 +12,8 @@
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.4.1
-Release: 5%{?dist}
+Version: 5.4.2
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -47,16 +47,6 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
-
-# fix GMutexLocker build issue
-Patch9: qtwebkit-opensource-src-5.4.0-mutexlocker.patch
-
-# fix gcc5 template issue
-Patch10: qt5-qtwebkit-gcc5.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1204795
-# https://codereview.qt-project.org/#/c/108936/
-Patch11: qtwebkit-opensource-src-5.4.1-private_browsing.patch
 
 %if 0%{?system_angle}
 BuildRequires: angleproject-devel angleproject-static
@@ -113,7 +103,6 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
-Requires: %{name} = %{version}-%{release}
 # for qhelpgenerator
 BuildRequires: qt5-qttools-devel
 BuildArch: noarch
@@ -134,9 +123,6 @@ BuildArch: noarch
 %endif
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
-%patch9 -p1 -b .MutexLocker
-%patch10 -p1 -b .gcc5-template
-%patch11 -p1 -b .private_browsing
 
 echo "nuke bundled code..."
 # nuke bundled code
@@ -218,8 +204,14 @@ popd
 
 
 %changelog
-* Wed Apr 29 2015 Daniel Vrátil <dvratil@redhat.com> 5.4.1-5
-- GCC5 rebuild (#1214354)
+* Wed Jun 03 2015 Jan Grulich <jgrulich@redhat.com> - 5.4.2-1
+- 5.4.2
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 5.4.1-6
+- Rebuilt for GCC 5 C++11 ABI change
+
+* Fri Apr 03 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.1-5
+- -doc: drop dep on main pkg, not strictly required
 
 * Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 5.4.1-4
 - QtWebKit logs visited URLs to WebpageIcons.db in private browsing mode (#1204795,#1204798)
