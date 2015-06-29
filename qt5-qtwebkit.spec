@@ -7,23 +7,22 @@
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
 %ifarch %{arm} %{ix86} x86_64
-%define docs 1
+#%define docs 1
+%define docs 0
 %endif
+
+%define prerelease rc
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.4.2
-Release: 2%{?dist}
+Version: 5.5.0
+Release: 0.2.rc%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Url: http://qt-project.org/
-%if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.4/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
-%else
-Source0: http://download.qt-project.org/official_releases/qt/5.4/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
-%endif
+Url:     http://www.qt.io
+Source0: http://download.qt.io/development_releases/qt/5.5/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -112,7 +111,7 @@ BuildArch: noarch
 
 
 %prep
-%setup -q -n qtwebkit-opensource-src-%{version}%{?pre:-%{pre}}
+%setup -q -n %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
@@ -135,7 +134,6 @@ mv Source/ThirdParty/ANGLE/ \
    Source/ThirdParty/orig/
 %endif
 
-
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
@@ -155,7 +153,6 @@ make %{?_smp_mflags} docs
 %endif
 popd
 
-
 %install
 make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
 
@@ -174,7 +171,6 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -204,8 +200,8 @@ popd
 
 
 %changelog
-* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.4.2-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+* Thu Jun 25 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-0.2.rc
+- Update for official RC1 released packages
 
 * Wed Jun 03 2015 Jan Grulich <jgrulich@redhat.com> - 5.4.2-1
 - 5.4.2
