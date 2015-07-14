@@ -7,8 +7,7 @@
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
 %ifarch %{arm} %{ix86} x86_64
-#%define docs 1
-%define docs 0
+%define docs 1
 %endif
 
 #define prerelease rc
@@ -16,7 +15,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.5.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -55,6 +54,7 @@ BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
 BuildRequires: qt5-qtlocation-devel
 BuildRequires: qt5-qtsensors-devel
+BuildRequires: qt5-qtwebchannel
 
 BuildRequires: bison
 BuildRequires: flex
@@ -200,6 +200,14 @@ popd
 
 
 %changelog
+* Mon Jul 13 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.5.0-2
+- add 5.5.0-1 changelog
+- BR: qt5-qtwebchannel-devel
+- (re)enable docs
+
+* Wed Jul 1 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-1
+- New final upstream release Qt 5.5.0
+
 * Thu Jun 25 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-0.2.rc
 - Update for official RC1 released packages
 
