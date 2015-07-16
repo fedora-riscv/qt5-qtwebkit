@@ -15,7 +15,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.5.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -83,7 +83,8 @@ BuildRequires: perl perl(version) perl(Digest::MD5) perl(Text::ParseWords)
 BuildRequires: ruby
 BuildRequires: zlib-devel
 
-%{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
+%{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
+%{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
 ##upstream patches
 
@@ -200,6 +201,9 @@ popd
 
 
 %changelog
+* Thu Jul 16 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-3
+- tighten deps (#1233829)
+
 * Mon Jul 13 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.5.0-2
 - add 5.5.0-1 changelog
 - BR: qt5-qtwebchannel-devel
