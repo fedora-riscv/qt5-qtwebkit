@@ -6,8 +6,12 @@
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
+#global bootstrap 1
+
+%if ! 0%{?bootstrap}
 %ifarch %{arm} %{ix86} x86_64
 %define docs 1
+%endif
 %endif
 
 #define prerelease rc
@@ -15,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.5.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -103,8 +107,7 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
-# for qhelpgenerator
-BuildRequires: qt5-qttools-devel
+BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
 %description doc
 %{summary}.
@@ -201,6 +204,9 @@ popd
 
 
 %changelog
+* Wed Jul 29 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-4
+- -docs: BuildRequires: qt5-qhelpgenerator, standardize bootstrapping
+
 * Thu Jul 16 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-3
 - tighten deps (#1233829)
 
