@@ -6,24 +6,26 @@
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
+#global bootstrap 1
+
+%if ! 0%{?bootstrap}
 %ifarch %{arm} %{ix86} x86_64
 %define docs 1
 %endif
+%endif
+
+#define prerelease rc
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.4.2
-Release: 1%{?dist}
+Version: 5.5.0
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Url: http://qt-project.org/
-%if 0%{?pre:1}
-Source0: http://download.qt-project.org/development_releases/qt/5.4/%{version}-%{pre}/submodules/%{qt_module}-opensource-src-%{version}-%{pre}.tar.xz
-%else
-Source0: http://download.qt-project.org/official_releases/qt/5.4/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
-%endif
+Url:     http://www.qt.io
+Source0: http://download.qt.io/official_releases/qt/5.5/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -56,6 +58,7 @@ BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
 BuildRequires: qt5-qtlocation-devel
 BuildRequires: qt5-qtsensors-devel
+BuildRequires: qt5-qtwebchannel
 
 BuildRequires: bison
 BuildRequires: flex
@@ -84,7 +87,8 @@ BuildRequires: perl perl(version) perl(Digest::MD5) perl(Text::ParseWords)
 BuildRequires: ruby
 BuildRequires: zlib-devel
 
-%{?_qt5_version:Requires: qt5-qtbase%{?_isa} >= %{_qt5_version}}
+%{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
+%{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
 ##upstream patches
 
@@ -103,8 +107,7 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
-# for qhelpgenerator
-BuildRequires: qt5-qttools-devel
+BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
 %description doc
 %{summary}.
@@ -112,7 +115,7 @@ BuildArch: noarch
 
 
 %prep
-%setup -q -n qtwebkit-opensource-src-%{version}%{?pre:-%{pre}}
+%setup -q -n %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
@@ -135,7 +138,6 @@ mv Source/ThirdParty/ANGLE/ \
    Source/ThirdParty/orig/
 %endif
 
-
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
@@ -155,7 +157,6 @@ make %{?_smp_mflags} docs
 %endif
 popd
 
-
 %install
 make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
 
@@ -174,7 +175,6 @@ for prl_file in libQt5*.prl ; do
   fi
 done
 popd
-
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -204,6 +204,23 @@ popd
 
 
 %changelog
+* Wed Jul 29 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-4
+- -docs: BuildRequires: qt5-qhelpgenerator, standardize bootstrapping
+
+* Thu Jul 16 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-3
+- tighten deps (#1233829)
+
+* Mon Jul 13 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.5.0-2
+- add 5.5.0-1 changelog
+- BR: qt5-qtwebchannel-devel
+- (re)enable docs
+
+* Wed Jul 1 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-1
+- New final upstream release Qt 5.5.0
+
+* Thu Jun 25 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.0-0.2.rc
+- Update for official RC1 released packages
+
 * Wed Jun 03 2015 Jan Grulich <jgrulich@redhat.com> - 5.4.2-1
 - 5.4.2
 
