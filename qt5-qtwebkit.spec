@@ -14,12 +14,12 @@
 %endif
 %endif
 
-#define prerelease rc
+%define prerelease rc1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.5.0
-Release: 4%{?dist}
+Version: 5.5.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -204,6 +204,9 @@ popd
 
 
 %changelog
+* Tue Sep 29 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.1-1
+- Update to Qt 5.5.1 RC1
+
 * Wed Jul 29 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.0-4
 - -docs: BuildRequires: qt5-qhelpgenerator, standardize bootstrapping
 
