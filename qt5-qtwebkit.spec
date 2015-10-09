@@ -83,7 +83,8 @@ BuildRequires: pkgconfig(libwebp)
 BuildRequires: pkgconfig(libxslt)
 BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
-BuildRequires: perl perl(version) perl(Digest::MD5) perl(Text::ParseWords)
+BuildRequires: perl perl(version)
+BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
 BuildRequires: ruby
 BuildRequires: zlib-devel
 
