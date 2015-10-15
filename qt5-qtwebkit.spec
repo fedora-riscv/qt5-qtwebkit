@@ -14,7 +14,7 @@
 %endif
 %endif
 
-%define prerelease rc1
+## define prerelease rc1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
