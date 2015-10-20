@@ -42,10 +42,6 @@ Patch7: 0001-Add-ARM-64-support.patch
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
-%if 0%{?system_angle}
-BuildRequires: angleproject-devel angleproject-static
-%endif
-
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
 BuildRequires: qt5-qtlocation-devel
