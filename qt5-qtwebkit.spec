@@ -6,7 +6,7 @@
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
-#global bootstrap 1
+%global bootstrap 1
 
 %if ! 0%{?bootstrap}
 %ifarch %{arm} %{ix86} x86_64
@@ -14,12 +14,12 @@
 %endif
 %endif
 
-## define prerelease rc1
+%define prerelease beta1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.5.1
-Release: 4%{?dist}
+Version: 5.6.0
+Release: 0.2%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -43,11 +43,10 @@ Patch7: 0001-Add-ARM-64-support.patch
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: qt5-qtdeclarative-devel >= %{version}
-BuildRequires: qt5-qtlocation-devel
-BuildRequires: qt5-qtsensors-devel
-BuildRequires: qt5-qtwebchannel
-
+BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+BuildRequires: pkgconfig(Qt5Sensors)
+BuildRequires: pkgconfig(Qt5Location)
+BuildRequires: pkgconfig(Qt5WebChannel)
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: gperf
@@ -96,6 +95,7 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+BuildRequires: qt5-qdoc
 BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
 %description doc
@@ -184,6 +184,12 @@ popd
 
 
 %changelog
+* Sun Dec 06 2015 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.2
+- (re)add bootstrap macro support
+
+* Tue Nov 03 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.1
+- Start to implement 5.6.0 beta
+
 * Wed Oct 28 2015 David Tardon <dtardon@redhat.com> - 5.5.1-4
 - rebuild for ICU 56.1
 
