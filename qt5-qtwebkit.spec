@@ -3,6 +3,11 @@
 
 %global _hardened_build 1
 
+# define to build docs, need to undef this for bootstrapping
+# where qt5-qttools builds are not yet available
+# only primary archs (for now), allow secondary to bootstrap
+%global bootstrap 1
+
 %define prerelease beta
 
 %define docs 1
@@ -10,7 +15,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 0.2%{?dist}
+Release: 0.3%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -33,14 +38,6 @@ Patch3: qtwebkit-opensource-src-5.0.1-debuginfo.patch
 # tweak linker flags to minimize memory usage on "small" platforms
 Patch4: qtwebkit-opensource-src-5.2.0-save_memory.patch
 
-# use unbundled system angleproject library
-#define system_angle 1
-# NEEDS REBASE -- rex
-Patch5: qtwebkit-opensource-src-5.0.2-system_angle.patch
-# Fix compilation against latest ANGLE
-# https://bugs.webkit.org/show_bug.cgi?id=109127
-Patch6: webkit-commit-142567.patch
-
 # Add AArch64 support
 Patch7: 0001-Add-ARM-64-support.patch
 
@@ -51,7 +48,6 @@ Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 BuildRequires: angleproject-devel 
 BuildRequires: angleproject-static
 %endif
-
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: pkgconfig(Qt5Qml) >= %{version}
 BuildRequires: pkgconfig(Qt5Sensors)
@@ -106,6 +102,7 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+BuildRequires: qt5-qdoc
 BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
 %description doc
@@ -119,10 +116,6 @@ BuildArch: noarch
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
 %patch4 -p1 -b .save_memory
-%if 0%{?system_angle}
-#patch5 -p1 -b .system_angle
-%patch6 -p1 -b .svn142567
-%endif
 %patch7 -p1 -b .aarch64
 %patch8 -p1 -b .no_rpath
 
@@ -132,17 +125,12 @@ mkdir Source/ThirdParty/orig
 mv Source/ThirdParty/{gtest/,qunit/} \
    Source/ThirdParty/orig/
 
-%if 0%{?system_angle}
-mv Source/ThirdParty/ANGLE/ \
-   Source/ThirdParty/orig/
-%endif
 
 %build
 mkdir %{_target_platform}
 pushd %{_target_platform}
 
 %{qmake_qt5} .. \
-	%{?system_angle:DEFINES+=USE_SYSTEM_ANGLE=1} \
 %ifnarch %{arm} %{ix86} x86_64
 	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
 %endif
@@ -203,11 +191,20 @@ popd
 
 
 %changelog
-* Thu Dec 10 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.2
+* Thu Dec 10 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.3
 - Official beta release
+
+* Sun Dec 06 2015 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.2
+- (re)add bootstrap macro support
 
 * Tue Nov 03 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.1
 - Start to implement 5.6.0 beta
+
+* Wed Oct 28 2015 David Tardon <dtardon@redhat.com> - 5.5.1-4
+- rebuild for ICU 56.1
+
+* Fri Oct 16 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.1-3
+- drop (unused) system_angle support/patches
 
 * Thu Oct 15 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.1-2
 - Update to final release 5.5.1
