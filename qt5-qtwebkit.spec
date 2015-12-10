@@ -3,29 +3,26 @@
 
 %global _hardened_build 1
 
-# define to build docs, need to undef this for bootstrapping
-# where qt5-qttools builds are not yet available
-# only primary archs (for now), allow secondary to bootstrap
-#global bootstrap 1
+%define prerelease beta
 
-%if ! 0%{?bootstrap}
-%ifarch %{arm} %{ix86} x86_64
 %define docs 1
-%endif
-%endif
-
-## define prerelease rc1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.5.1
-Release: 2%{?dist}
+Version: 5.6.0
+Release: 0.2%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Url:     http://www.qt.io
-Source0: http://download.qt.io/official_releases/qt/5.5/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+Url: http://www.qt.io
+# The source for this package was pulled from upstream's vcs.  Use the
+# following commands to generate the tarball:
+# git clone git@github.com:qtproject/qtwebkit.git && cd qtwebkit 
+# git archive --prefix=qt5-qtwebkit-opensource-src-5.6.0-beta/ origin/5.6 | tar -x -C ..
+# cd ../qt5-qtwebkit-opensource-src-5.6.0-beta && syncqt.pl -version 5.6.0 && cd ..
+# tar cfz qt5-qtwebkit-opensource-src-5.6.0-beta.tar.gz qt5-qtwebkit-opensource-src-5.6.0-beta
+Source0: %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.gz
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -51,15 +48,16 @@ Patch7: 0001-Add-ARM-64-support.patch
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
 %if 0%{?system_angle}
-BuildRequires: angleproject-devel angleproject-static
+BuildRequires: angleproject-devel 
+BuildRequires: angleproject-static
 %endif
 
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: qt5-qtdeclarative-devel >= %{version}
-BuildRequires: qt5-qtlocation-devel
-BuildRequires: qt5-qtsensors-devel
-BuildRequires: qt5-qtwebchannel
-
+BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+BuildRequires: pkgconfig(Qt5Sensors)
+BuildRequires: pkgconfig(Qt5Location)
+BuildRequires: pkgconfig(Qt5WebChannel)
+BuildRequires: qt5-qdoc
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: gperf
@@ -205,6 +203,12 @@ popd
 
 
 %changelog
+* Thu Dec 10 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.2
+- Official beta release
+
+* Tue Nov 03 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.1
+- Start to implement 5.6.0 beta
+
 * Thu Oct 15 2015 Helio Chissini de Castro <helio@kde.org> - 5.5.1-2
 - Update to final release 5.5.1
 
