@@ -3,7 +3,7 @@
 
 %global _hardened_build 1
 
-%global bootstrap 1
+#global bootstrap 1
 
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
