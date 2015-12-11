@@ -3,19 +3,23 @@
 
 %global _hardened_build 1
 
+%global bootstrap 1
+
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
-%global bootstrap 1
+%if ! 0%{?bootstrap}
+%ifarch %{arm} %{ix86} x86_64
+%define docs 1
+%endif
+%endif
 
 %define prerelease beta
-
-%define docs 1
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 0.3%{?dist}
+Release: 0.4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -44,16 +48,13 @@ Patch7: 0001-Add-ARM-64-support.patch
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
-%if 0%{?system_angle}
-BuildRequires: angleproject-devel 
-BuildRequires: angleproject-static
-%endif
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+%if ! 0%{?bootstrap}
 BuildRequires: pkgconfig(Qt5Sensors)
 BuildRequires: pkgconfig(Qt5Location)
 BuildRequires: pkgconfig(Qt5WebChannel)
-BuildRequires: qt5-qdoc
+%endif
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: gperf
@@ -191,6 +192,11 @@ popd
 
 
 %changelog
+* Fri Dec 11 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-0.4
+- restore bootstrap macro, omit more optional BR's/features in bootstrap mode
+- drop (unused) system_angle support
+- include -qdoc builddep only in -doc subpkg
+
 * Thu Dec 10 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.3
 - Official beta release
 
