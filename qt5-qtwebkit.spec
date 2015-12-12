@@ -126,6 +126,11 @@ mkdir Source/ThirdParty/orig
 mv Source/ThirdParty/{gtest/,qunit/} \
    Source/ThirdParty/orig/
 
+# check for prerelease macro instead?  --rex
+if [ ! -d include ]; then
+syncqt.pl -version %{version} Source/sync.profile
+fi
+
 
 %build
 mkdir %{_target_platform}
