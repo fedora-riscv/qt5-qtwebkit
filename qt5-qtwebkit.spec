@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 0.4%{?dist}
+Release: 0.5%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -197,6 +197,9 @@ popd
 
 
 %changelog
+* Sun Dec 13 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.5
+- Update beta code
+
 * Fri Dec 11 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-0.4
 - restore bootstrap macro, omit more optional BR's/features in bootstrap mode
 - drop (unused) system_angle support
