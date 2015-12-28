@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 0.5%{?dist}
+Release: 0.6%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -197,6 +197,9 @@ popd
 
 
 %changelog
+* Mon Dec 28 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 5.6.0-0.6
+- Rebuilt for libwebp soname bump
+
 * Sun Dec 13 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.5
 - Update beta code
 
