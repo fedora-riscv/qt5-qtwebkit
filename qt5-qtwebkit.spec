@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 0.11.%{prerelease}%{?dist}
+Release: 0.12.%{prerelease}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -31,7 +31,12 @@ Url: http://www.qt.io
 # git archive --prefix=qt5-qtwebkit-opensource-src-5.6.0-beta/ origin/5.6 | tar -x -C ..
 # cd ../qt5-qtwebkit-opensource-src-5.6.0-beta && syncqt.pl -version 5.6.0 && cd ..
 # tar cfz qt5-qtwebkit-opensource-src-5.6.0-beta.tar.xz qt5-qtwebkit-opensource-src-5.6.0-beta
-Source0: %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+
+%if 0%{?prerelease:1}
+Source0: http://download.qt.io/development_releases/qt/5.6/%{version}-%{prerelease}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+%else
+Source0: http://download.qt.io/official_releases/qt/5.6/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
+%endif
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -113,7 +118,7 @@ BuildArch: noarch
 
 
 %prep
-%setup -q -n %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}
+%setup -q -n %{qt_module}-opensource-src-%{version}
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
@@ -198,6 +203,9 @@ popd
 
 
 %changelog
+* Mon Feb 29 2016 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.12.rc
+- fix sources
+
 * Wed Feb 24 2016 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.11.rc
 - Fix the trap caused by rpmdev-bumpspec
 
