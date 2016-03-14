@@ -14,29 +14,18 @@
 %endif
 %endif
 
-%define prerelease rc
+#define prerelease
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 0.12.%{prerelease}%{?dist}
+Release: 1%{?prerelease:.%{prerelease}}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://www.qt.io
-# The source for this package was pulled from upstream's vcs.  Use the
-# following commands to generate the tarball:
-# git clone git@github.com:qtproject/qtwebkit.git && cd qtwebkit 
-# git archive --prefix=qt5-qtwebkit-opensource-src-5.6.0-beta/ origin/5.6 | tar -x -C ..
-# cd ../qt5-qtwebkit-opensource-src-5.6.0-beta && syncqt.pl -version 5.6.0 && cd ..
-# tar cfz qt5-qtwebkit-opensource-src-5.6.0-beta.tar.xz qt5-qtwebkit-opensource-src-5.6.0-beta
-
-%if 0%{?prerelease:1}
-Source0: http://download.qt.io/development_releases/qt/5.6/%{version}-%{prerelease}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
-%else
-Source0: http://download.qt.io/official_releases/qt/5.6/%{version}/submodules/%{qt_module}-opensource-src-%{version}.tar.xz
-%endif
+Source0: http://download.qt.io/snapshots/qt/5.6/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -203,6 +192,9 @@ popd
 
 
 %changelog
+* Mon Mar 14 2016 Helio Chissini de Castro <helio@kde.org> - 5.6.0-1
+- 5.6.0 final release
+
 * Mon Feb 29 2016 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.12.rc
 - fix sources
 
