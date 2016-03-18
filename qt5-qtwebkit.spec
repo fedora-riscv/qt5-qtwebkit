@@ -3,29 +3,29 @@
 
 %global _hardened_build 1
 
+#global bootstrap 1
+
 # define to build docs, need to undef this for bootstrapping
 # where qt5-qttools builds are not yet available
 # only primary archs (for now), allow secondary to bootstrap
-#global bootstrap 1
-
 %if ! 0%{?bootstrap}
 %ifarch %{arm} %{ix86} x86_64
 %define docs 1
 %endif
 %endif
 
-## define prerelease rc1
+#define prerelease
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.5.1
-Release: 3%{?dist}
+Version: 5.6.0
+Release: 1%{?prerelease:.%{prerelease}}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Url:     http://www.qt.io
-Source0: http://download.qt.io/official_releases/qt/5.5/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+Url: http://www.qt.io
+Source0: http://download.qt.io/snapshots/qt/5.6/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -42,12 +42,14 @@ Patch7: 0001-Add-ARM-64-support.patch
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
+BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: qt5-qtdeclarative-devel >= %{version}
-BuildRequires: qt5-qtlocation-devel
-BuildRequires: qt5-qtsensors-devel
-BuildRequires: qt5-qtwebchannel
-
+BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+%if ! 0%{?bootstrap}
+BuildRequires: pkgconfig(Qt5Sensors)
+BuildRequires: pkgconfig(Qt5Location)
+BuildRequires: pkgconfig(Qt5WebChannel)
+%endif
 BuildRequires: bison
 BuildRequires: flex
 BuildRequires: gperf
@@ -96,6 +98,7 @@ Requires: qt5-qtdeclarative-devel%{?_isa}
 %if 0%{?docs}
 %package doc
 Summary: API documentation for %{name}
+BuildRequires: qt5-qdoc
 BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
 %description doc
@@ -104,7 +107,7 @@ BuildArch: noarch
 
 
 %prep
-%setup -q -n %{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}
+%setup -q -n %{qt_module}-opensource-src-%{version}
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
@@ -117,6 +120,11 @@ echo "nuke bundled code..."
 mkdir Source/ThirdParty/orig
 mv Source/ThirdParty/{gtest/,qunit/} \
    Source/ThirdParty/orig/
+
+# check for prerelease macro instead?  --rex
+if [ ! -d include ]; then
+syncqt.pl -version %{version} Source/sync.profile
+fi
 
 
 %build
@@ -160,7 +168,7 @@ popd
 %postun -p /sbin/ldconfig
 
 %files
-%doc Source/WebCore/LICENSE*
+%license Source/WebCore/LICENSE*
 %doc ChangeLog* VERSION
 %{_qt5_libdir}/libQt5WebKit.so.5*
 %{_qt5_libdir}/libQt5WebKitWidgets.so.5*
@@ -184,6 +192,50 @@ popd
 
 
 %changelog
+* Mon Mar 14 2016 Helio Chissini de Castro <helio@kde.org> - 5.6.0-1
+- 5.6.0 final release
+
+* Mon Feb 29 2016 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.12.rc
+- fix sources
+
+* Wed Feb 24 2016 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.11.rc
+- Fix the trap caused by rpmdev-bumpspec
+
+* Tue Feb 23 2016 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.10.rc
+- Update to final RC
+
+* Mon Feb 15 2016 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.9
+- Update RC release
+
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5.6.0-0.8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Mon Dec 28 2015 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.7
+- BR: cmake, use %%license
+
+* Mon Dec 28 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 5.6.0-0.6
+- Rebuilt for libwebp soname bump
+
+* Sun Dec 13 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.5
+- Update beta code
+
+* Fri Dec 11 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-0.4
+- restore bootstrap macro, omit more optional BR's/features in bootstrap mode
+- drop (unused) system_angle support
+- include -qdoc builddep only in -doc subpkg
+
+* Thu Dec 10 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.3
+- Official beta release
+
+* Sun Dec 06 2015 Rex Dieter <rdieter@fedoraproject.org> 5.6.0-0.2
+- (re)add bootstrap macro support
+
+* Tue Nov 03 2015 Helio Chissini de Castro <helio@kde.org> - 5.6.0-0.1
+- Start to implement 5.6.0 beta
+
+* Wed Oct 28 2015 David Tardon <dtardon@redhat.com> - 5.5.1-4
+- rebuild for ICU 56.1
+
 * Fri Oct 16 2015 Rex Dieter <rdieter@fedoraproject.org> 5.5.1-3
 - drop (unused) system_angle support/patches
 
