@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 3%{?prerelease:.%{prerelease}}%{?dist}
+Release: 4%{?prerelease:.%{prerelease}}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -75,7 +75,7 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
 BuildRequires: perl perl(version)
 BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
-BuildRequires: ruby
+BuildRequires: ruby rubypick rubygem
 BuildRequires: zlib-devel
 
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
@@ -192,6 +192,9 @@ popd
 
 
 %changelog
+* Wed Apr  6 2016 Peter Robinson <pbrobinson@fedoraproject.org> 5.6.0-4
+- Update ruby deps to ensure all bits are present
+
 * Sun Mar 20 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-3
 - rebuild
 
