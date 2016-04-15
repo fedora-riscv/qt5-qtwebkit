@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 4%{?prerelease:.%{prerelease}}%{?dist}
+Release: 5%{?prerelease:.%{prerelease}}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -192,6 +192,9 @@ popd
 
 
 %changelog
+* Fri Apr 15 2016 David Tardon <dtardon@redhat.com> - 5.6.0-5
+- rebuild for ICU 57.1
+
 * Wed Apr  6 2016 Peter Robinson <pbrobinson@fedoraproject.org> 5.6.0-4
 - Update ruby deps to ensure all bits are present
 
