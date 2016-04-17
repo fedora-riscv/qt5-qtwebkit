@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 5%{?prerelease:.%{prerelease}}%{?dist}
+Release: 6%{?prerelease:.%{prerelease}}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -78,7 +78,9 @@ BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
 BuildRequires: ruby rubypick rubygems
 BuildRequires: zlib-devel
 
+BuildRequires:  qt5-qtbase-private-devel
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
+BuildRequires:  qt5-qtdeclarative-private-devel
 %{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
 ##upstream patches
@@ -192,6 +194,9 @@ popd
 
 
 %changelog
+* Sun Apr 17 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-6
+- BR: qt5-qtbase-private-devel qt5-qtdeclarative-private-devel
+
 * Fri Apr 15 2016 David Tardon <dtardon@redhat.com> - 5.6.0-5
 - rebuild for ICU 57.1
 
