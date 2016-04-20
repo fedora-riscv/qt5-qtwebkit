@@ -19,7 +19,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 6%{?prerelease:.%{prerelease}}%{?dist}
+Release: 7%{?prerelease:.%{prerelease}}%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -194,6 +194,9 @@ popd
 
 
 %changelog
+* Wed Apr 20 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-7}
+- rebuild (icu)
+
 * Sun Apr 17 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-6
 - BR: qt5-qtbase-private-devel qt5-qtdeclarative-private-devel
 
