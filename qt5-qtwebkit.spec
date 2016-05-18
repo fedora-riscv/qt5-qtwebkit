@@ -14,18 +14,17 @@
 %endif
 %endif
 
-#define prerelease
-
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.0
-Release: 7%{?prerelease:.%{prerelease}}%{?dist}
+Release: 8%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://www.qt.io
-Source0: http://download.qt.io/snapshots/qt/5.6/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+Source0: http://download.qt.io/community_releases/5.6/%{version}/qtwebkit-opensource-src-%{version}.tar.xz
+#Source0: http://download.qt.io/snapshots/qt/5.6/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
 
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
@@ -194,7 +193,10 @@ popd
 
 
 %changelog
-* Wed Apr 20 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-7}
+* Wed May 18 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-8
+- use pristine upstream (community) sources
+
+* Wed Apr 20 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-7
 - rebuild (icu)
 
 * Sun Apr 17 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-6
