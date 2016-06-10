@@ -14,18 +14,31 @@
 %endif
 %endif
 
+%global commit0 b889f460280ad98c89ede179bd3b9ce9cb02002b
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.6.0
-Release: 9%{?dist}
+Version: 5.6.1
+Release: 1.%{shortcommit0}git%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://www.qt.io
+%if 0%{?commit0:1}
+# The source for this package was pulled from upstream's vcs.  Use the
+# following commands to generate the tarball:
+# git clone git@github.com:qtproject/qtqebkit.git && cd qtwebkit
+# git archive --prefix=qtwebkit-opensource-src-5.6.1/ origin/5.6.1 | tar -x -C ..
+# cd ../qtwebkit-opensource-src-5.6.1 && syncqt.pl -version 5.6.1 Source/sync.profile && cd ..
+# tar cfJ qt5-webkit-opensource-src-5.6.1.tar.xz qtwebkit-opensource-src-5.6.1/
+Source0: %{qt_module}-opensource-src-%{version}-%{shortcommit0}.tar.xz
+%else
 Source0: http://download.qt.io/community_releases/5.6/%{version}/qtwebkit-opensource-src-%{version}.tar.xz
-#Source0: http://download.qt.io/snapshots/qt/5.6/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+%endif
 
+## downstream patches
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
 
@@ -40,6 +53,10 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
+
+## upstream patches
+Patch105: 0005-Added-missing-break-statement.patch
+Patch109: 0009-Fixed-drawing-of-zoomed-border-image-with-repeat-mod.patch
 
 BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -110,6 +127,9 @@ BuildArch: noarch
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}
 
+%patch105 -p1 -b .0005
+%patch109 -p1 -b .0009
+
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
 %patch4 -p1 -b .save_memory
@@ -122,7 +142,6 @@ mkdir Source/ThirdParty/orig
 mv Source/ThirdParty/{gtest/,qunit/} \
    Source/ThirdParty/orig/
 
-# check for prerelease macro instead?  --rex
 if [ ! -d include ]; then
 syncqt.pl -version %{version} Source/sync.profile
 fi
@@ -139,12 +158,13 @@ pushd %{_target_platform}
 
 # workaround, disable parallel compilation as it fails to compile in brew
 #make %{?_smp_mflags}
-make -j2
+make -j3
 
 %if 0%{?docs}
 make %{?_smp_mflags} docs
 %endif
 popd
+
 
 %install
 make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
@@ -193,6 +213,9 @@ popd
 
 
 %changelog
+* Thu Jun 09 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-1.b889f46git
+- 5.6.1 branch snapshot, plus a couple post-5.6.1 5.6 branch fixes
+
 * Thu Jun 09 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-9
 - rebuild (qtbase)
 
