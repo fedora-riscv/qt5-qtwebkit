@@ -20,7 +20,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.1
-Release: 1.%{shortcommit0}git%{?dist}
+Release: 2.%{shortcommit0}git%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -213,6 +213,9 @@ popd
 
 
 %changelog
+* Tue Jun 14 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-2.b889f46git
+- rebuild (glibc)
+
 * Thu Jun 09 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-1.b889f46git
 - 5.6.1 branch snapshot, plus a couple post-5.6.1 5.6 branch fixes
 
