@@ -91,7 +91,10 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
 BuildRequires: perl perl(version)
 BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
-BuildRequires: ruby rubypick rubygems
+BuildRequires: ruby rubygems
+%if 0%{?fedora}
+BuildRequires: rubypick
+%endif
 BuildRequires: zlib-devel
 
 BuildRequires:  qt5-qtbase-private-devel
