@@ -20,7 +20,7 @@
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
 Version: 5.6.1
-Release: 2.%{shortcommit0}git%{?dist}
+Release: 3.%{shortcommit0}git%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -60,11 +60,11 @@ Patch109: 0009-Fixed-drawing-of-zoomed-border-image-with-repeat-mod.patch
 
 BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+BuildRequires: qt5-qtdeclarative-devel >= %{version}
 %if ! 0%{?bootstrap}
-BuildRequires: pkgconfig(Qt5Sensors)
-BuildRequires: pkgconfig(Qt5Location)
-BuildRequires: pkgconfig(Qt5WebChannel)
+BuildRequires: qt5-qtsensors-devel
+BuildRequires: qt5-qtlocation-devel
+BuildRequires: qt5-qtwebchannel-devel
 %endif
 BuildRequires: bison
 BuildRequires: flex
@@ -213,6 +213,9 @@ popd
 
 
 %changelog
+* Wed Jun 15 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-3.b889f46git
+- drop pkgconfig-style deps
+
 * Tue Jun 14 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-2.b889f46git
 - rebuild (glibc)
 
