@@ -14,19 +14,31 @@
 %endif
 %endif
 
-#define prerelease
+%global commit0 b889f460280ad98c89ede179bd3b9ce9cb02002b
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.6.0
-Release: 3%{?prerelease:.%{prerelease}}%{?dist}
+Version: 5.6.1
+Release: 3.%{shortcommit0}git%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 Url: http://www.qt.io
-Source0: http://download.qt.io/snapshots/qt/5.6/%{version}%{?prerelease:-%{prerelease}}/submodules/%{qt_module}-opensource-src-%{version}%{?prerelease:-%{prerelease}}.tar.xz
+%if 0%{?commit0:1}
+# The source for this package was pulled from upstream's vcs.  Use the
+# following commands to generate the tarball:
+# git clone git@github.com:qtproject/qtqebkit.git && cd qtwebkit
+# git archive --prefix=qtwebkit-opensource-src-5.6.1/ origin/5.6.1 | tar -x -C ..
+# cd ../qtwebkit-opensource-src-5.6.1 && syncqt.pl -version 5.6.1 Source/sync.profile && cd ..
+# tar cfJ qt5-webkit-opensource-src-5.6.1.tar.xz qtwebkit-opensource-src-5.6.1/
+Source0: %{qt_module}-opensource-src-%{version}-%{shortcommit0}.tar.xz
+%else
+Source0: http://download.qt.io/community_releases/5.6/%{version}/qtwebkit-opensource-src-%{version}.tar.xz
+%endif
 
+## downstream patches
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
 Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
 
@@ -42,13 +54,17 @@ Patch7: 0001-Add-ARM-64-support.patch
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
+## upstream patches
+Patch105: 0005-Added-missing-break-statement.patch
+Patch109: 0009-Fixed-drawing-of-zoomed-border-image-with-repeat-mod.patch
+
 BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+BuildRequires: qt5-qtdeclarative-devel >= %{version}
 %if ! 0%{?bootstrap}
-BuildRequires: pkgconfig(Qt5Sensors)
-BuildRequires: pkgconfig(Qt5Location)
-BuildRequires: pkgconfig(Qt5WebChannel)
+BuildRequires: qt5-qtsensors-devel
+BuildRequires: qt5-qtlocation-devel
+BuildRequires: qt5-qtwebchannel-devel
 %endif
 BuildRequires: bison
 BuildRequires: flex
@@ -75,10 +91,12 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
 BuildRequires: perl perl(version)
 BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
-BuildRequires: ruby
+BuildRequires: ruby rubypick rubygems
 BuildRequires: zlib-devel
 
+BuildRequires:  qt5-qtbase-private-devel
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
+BuildRequires:  qt5-qtdeclarative-private-devel
 %{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
 ##upstream patches
@@ -109,6 +127,9 @@ BuildArch: noarch
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}
 
+%patch105 -p1 -b .0005
+%patch109 -p1 -b .0009
+
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
 %patch4 -p1 -b .save_memory
@@ -121,7 +142,6 @@ mkdir Source/ThirdParty/orig
 mv Source/ThirdParty/{gtest/,qunit/} \
    Source/ThirdParty/orig/
 
-# check for prerelease macro instead?  --rex
 if [ ! -d include ]; then
 syncqt.pl -version %{version} Source/sync.profile
 fi
@@ -138,12 +158,13 @@ pushd %{_target_platform}
 
 # workaround, disable parallel compilation as it fails to compile in brew
 #make %{?_smp_mflags}
-make -j2
+make -j3
 
 %if 0%{?docs}
 make %{?_smp_mflags} docs
 %endif
 popd
+
 
 %install
 make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
@@ -192,6 +213,33 @@ popd
 
 
 %changelog
+* Wed Jun 15 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-3.b889f46git
+- drop pkgconfig-style deps
+
+* Tue Jun 14 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-2.b889f46git
+- rebuild (glibc)
+
+* Thu Jun 09 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-1.b889f46git
+- 5.6.1 branch snapshot, plus a couple post-5.6.1 5.6 branch fixes
+
+* Thu Jun 09 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-9
+- rebuild (qtbase)
+
+* Wed May 18 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-8
+- use pristine upstream (community) sources
+
+* Wed Apr 20 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-7
+- rebuild (icu)
+
+* Sun Apr 17 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-6
+- BR: qt5-qtbase-private-devel qt5-qtdeclarative-private-devel
+
+* Fri Apr 15 2016 David Tardon <dtardon@redhat.com> - 5.6.0-5
+- rebuild for ICU 57.1
+
+* Wed Apr  6 2016 Peter Robinson <pbrobinson@fedoraproject.org> 5.6.0-4
+- Update ruby deps to ensure all bits are present
+
 * Sun Mar 20 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.0-3
 - rebuild
 
