@@ -14,13 +14,13 @@
 %endif
 %endif
 
-%global commit0 b889f460280ad98c89ede179bd3b9ce9cb02002b
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+#global commit0 b889f460280ad98c89ede179bd3b9ce9cb02002b
+#global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 
 Summary: Qt5 - QtWebKit components
 Name:    qt5-qtwebkit
-Version: 5.6.1
-Release: 3.%{shortcommit0}git%{?dist}
+Version: 5.6.2
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -55,10 +55,7 @@ Patch7: 0001-Add-ARM-64-support.patch
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
 ## upstream patches
-Patch105: 0005-Added-missing-break-statement.patch
-Patch109: 0009-Fixed-drawing-of-zoomed-border-image-with-repeat-mod.patch
 
-BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
 %if ! 0%{?bootstrap}
@@ -129,9 +126,6 @@ BuildArch: noarch
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}
-
-%patch105 -p1 -b .0005
-%patch109 -p1 -b .0009
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
@@ -216,6 +210,9 @@ popd
 
 
 %changelog
+* Wed Nov 16 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.2-1
+- 5.6.2
+
 * Wed Jun 15 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-3.b889f46git
 - drop pkgconfig-style deps
 
