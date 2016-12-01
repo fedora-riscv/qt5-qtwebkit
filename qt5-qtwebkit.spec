@@ -5,8 +5,8 @@
 
 Summary: Qt5 - QtWebKit components
 Name: qt5-qtwebkit
-Version: 5.7.0
-Release: 2%{?dist}
+Version: 5.7.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -28,10 +28,6 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
-
-## upstream patches
-Patch105: 0005-Added-missing-break-statement.patch
-Patch109: 0009-Fixed-drawing-of-zoomed-border-image-with-repeat-mod.patch
 
 BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
@@ -101,9 +97,6 @@ BuildArch: noarch
 
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}
-
-%patch105 -p1 -b .0005
-%patch109 -p1 -b .0009
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
@@ -188,6 +181,9 @@ popd
 
 
 %changelog
+* Wed Nov 09 2016 Helio Chissini de Castro <helio@kde.org> - 5.7.1-1
+- New upstream version
+
 * Mon Jul 04 2016 Helio Chissini de Castro <helio@kde.org> - 5.7.0-2
 - Compiled with gcc
 
