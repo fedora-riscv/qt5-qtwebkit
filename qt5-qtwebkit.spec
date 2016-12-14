@@ -11,7 +11,7 @@ Release: 2%{?dist}
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Source0: http://download.qt.io/official_releases/qt/5.7/%{version}/latest_src/submodules/qtwebkit-opensource-src-%{version}.tar.xz
+Source0: http://download.qt.io/community_releases/5.7/%{version}/%{qt_module}-opensource-src-%{version}.tar.xz
 
 ## downstream patches
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
