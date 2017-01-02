@@ -33,7 +33,7 @@ Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 %global __provides_exclude_from ^%{_qt5_archdatadir}/qml/.*\\.so$
 
 BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: pkgconfig(Qt5Qml) >= %{version}
+BuildRequires: qt5-qtdeclarative-devel >= %{version}
 %if ! 0%{?bootstrap}
 BuildRequires: pkgconfig(Qt5Sensors)
 BuildRequires: pkgconfig(Qt5Location)
@@ -64,6 +64,7 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
 BuildRequires: perl perl(version)
 BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
+BuildRequires: python
 BuildRequires: ruby rubypick rubygems
 BuildRequires: zlib-devel
 
@@ -184,7 +185,7 @@ popd
 
 %changelog
 * Mon Jan 02 2017 Rex Dieter <rdieter@math.unl.edu> - 5.7.1-3
-- filter qml provides
+- filter qml provides, BR: qtdeclarative python expicitly
 
 * Sat Dec 10 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.7.1-2
 - drop BR: cmake (handled by qt5-rpm-macros now)
