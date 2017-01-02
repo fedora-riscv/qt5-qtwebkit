@@ -6,7 +6,7 @@
 Summary: Qt5 - QtWebKit components
 Name: qt5-qtwebkit
 Version: 5.7.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -28,6 +28,9 @@ Patch7: 0001-Add-ARM-64-support.patch
 
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
+
+# filter qml provides
+%global __provides_exclude_from ^%{_qt5_archdatadir}/qml/.*\\.so$
 
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: pkgconfig(Qt5Qml) >= %{version}
@@ -180,6 +183,9 @@ popd
 
 
 %changelog
+* Mon Jan 02 2017 Rex Dieter <rdieter@math.unl.edu> - 5.7.1-3
+- filter qml provides
+
 * Sat Dec 10 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.7.1-2
 - drop BR: cmake (handled by qt5-rpm-macros now)
 - 5.7.1 dec5 snapshot
