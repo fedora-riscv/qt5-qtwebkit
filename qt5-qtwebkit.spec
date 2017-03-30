@@ -5,13 +5,13 @@
 
 Summary: Qt5 - QtWebKit components
 Name: qt5-qtwebkit
-Version: 5.7.1
-Release: 5%{?dist}
+Version: 5.8.0
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Source0: http://download.qt.io/community_releases/5.7/%{version}/%{qt_module}-opensource-src-%{version}.tar.xz
+Source0: http://download.qt.io/community_releases/5.8/%{version}-final/%{qt_module}-opensource-src-%{version}.tar.xz
 
 ## downstream patches
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
@@ -74,7 +74,6 @@ BuildRequires:  qt5-qtdeclarative-private-devel
 %{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
 ##upstream patches
-
 
 %description
 %{summary}
@@ -184,6 +183,9 @@ popd
 
 
 %changelog
+* Thu Mar 30 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.8.0-1
+- 5.8.0
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
