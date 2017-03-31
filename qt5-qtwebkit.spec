@@ -163,7 +163,7 @@ popd
 %doc ChangeLog* VERSION
 %{_qt5_libdir}/libQt5WebKit.so.5*
 %{_qt5_libdir}/libQt5WebKitWidgets.so.5*
-%{_qt5_libexecdir}/QtWebPluginProcess
+#{_qt5_libexecdir}/QtWebPluginProcess
 %{_qt5_libexecdir}/QtWebProcess
 %{_qt5_archdatadir}/qml/QtWebKit/
 
