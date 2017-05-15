@@ -6,7 +6,7 @@
 Summary: Qt5 - QtWebKit components
 Name: qt5-qtwebkit
 Version: 5.9.0
-Release: 0.beta.3%{?dist}
+Release: 0.beta.3%{?dist}.1
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -181,6 +181,9 @@ popd
 
 
 %changelog
+* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9.0-0.beta.3.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_27_Mass_Rebuild
+
 * Wed May 10 2017 Helio Chissini de Castro <helio@kde.org> - 5.9.0-0.beta.3
 - Community beta3
 
