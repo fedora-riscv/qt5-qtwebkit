@@ -6,12 +6,12 @@
 Summary: Qt5 - QtWebKit components
 Name: qt5-qtwebkit
 Version: 5.9.0
-Release: 0.1.rc%{?dist}.1
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Source0: http://download.qt.io/community_releases/5.9/%{version}-rc/%{qt_module}-opensource-src-%{version}-rc.tar.xz
+Source0: http://download.qt.io/community_releases/5.9/%{version}-final/%{qt_module}-opensource-src-%{version}.tar.xz
 
 ## downstream patches
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
@@ -184,6 +184,9 @@ popd
 
 
 %changelog
+* Sat Jun 10 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.9.0-1
+- 5.9.0 (final)
+
 * Sun May 28 2017 Helio Chissini de Castro <helio@kde.org> - 5.9.0-0.1.rc
 - Release candidate community
 
