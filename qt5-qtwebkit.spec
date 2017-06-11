@@ -99,7 +99,7 @@ BuildArch: noarch
 
 
 %prep
-%setup -q -n %{qt_module}-opensource-src-%{version}-rc
+%setup -q -n %{qt_module}-opensource-src-%{version}
 
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
