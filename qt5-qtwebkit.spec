@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.2.%{?prerel}%{?dist}
+Release:        0.3.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -120,6 +120,7 @@ BuildArch: noarch
 %endif
 
 %{cmake} -DPORT=Qt \
+       -DCMAKE_BUILD_TYPE=Release \
        -DENABLE_TOOLS=OFF \
        -DINCLUDE_INSTALL_DIR:PATH=%{_qt5_headerdir} \
        -DLIBEXEC_INSTALL_DIR:PATH=%{_qt5_libexecdir} \
@@ -197,6 +198,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Wed Jun 21 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.3.alpha2
+- ensure that we do a release build
+
 * Wed Jun 21 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.2.alpha2
 - few spec adjustments
 
