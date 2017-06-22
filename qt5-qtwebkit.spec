@@ -60,9 +60,6 @@ BuildRequires:  qt5-qtbase-private-devel
 BuildRequires:  qt5-qtdeclarative-private-devel
 %{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
-# Why does this not work automatically?
-Provides:       pkgconfig(Qt5WebKit) = %{version}-%{release}
-Provides:       pkgconfig(Qt5WebKitWidgets) = %{version}-%{release}
 
 # filter qml provides
 %global __provides_exclude_from ^%{_qt5_archdatadir}/qml/.*\\.so$
@@ -82,6 +79,9 @@ Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       qt5-qtbase-devel%{?_isa}
 Requires:       qt5-qtdeclarative-devel%{?_isa}
+# Why does this not work automatically?
+Provides:       pkgconfig(Qt5WebKit) = %{version}-%{release}
+Provides:       pkgconfig(Qt5WebKitWidgets) = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
