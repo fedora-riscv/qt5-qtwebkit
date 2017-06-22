@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.3.%{?prerel}%{?dist}
+Release:        0.4.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -40,6 +40,7 @@ BuildRequires:  libXrender-devel
 BuildRequires:  libxslt-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  perl-generators
+BuildRequires:  pkg-config
 BuildRequires:  python2
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
@@ -198,6 +199,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Thu Jun 22 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.4.alpha2
+- BR: pkg-config
+
 * Wed Jun 21 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.3.alpha2
 - ensure that we do a release build
 
