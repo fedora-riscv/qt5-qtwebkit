@@ -3,89 +3,89 @@
 
 %global _hardened_build 1
 
-Summary: Qt5 - QtWebKit components
-Name: qt5-qtwebkit
-Version: 5.7.1
-Release: 6%{?dist}
+%global prerel alpha2
+%global prerel_tag -%{prerel}
 
-# See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
-# See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
-License: LGPLv2 with exceptions or GPLv3 with exceptions
-Source0: http://download.qt.io/community_releases/5.7/%{version}/%{qt_module}-opensource-src-%{version}.tar.xz
+## NOTE: Lots of files in various subdirectories have the same name (such as
+## "LICENSE") so this short macro allows us to distinguish them by using their
+## directory names (from the source tree) as prefixes for the files.
+%global add_to_license_files() \
+        mkdir -p _license_files ; \
+        cp -p %1 _license_files/$(echo '%1' | sed -e 's!/!.!g')
 
-## downstream patches
-# Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
-Patch1: qtwebkit-opensource-src-5.2.0-pluginpath.patch
+Name:           qt5-%{qt_module}
+Version:        5.212.0
+Release:        0.4.%{?prerel}%{?dist}
+Summary:        Qt5 - QtWebKit components
 
-# smaller debuginfo s/-g/-g1/ (debian uses -gstabs) to avoid 4gb size limit
-Patch3: qtwebkit-opensource-src-5.0.1-debuginfo.patch
+License:        LGPLv2 and BSD
+URL:            https://github.com/annulen/webkit
+Source0:        %{url}/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%{qt_module}-%{version}%{?prerel_tag}.tar.xz
 
-# tweak linker flags to minimize memory usage on "small" platforms
-Patch4: qtwebkit-opensource-src-5.2.0-save_memory.patch
-
-# Add AArch64 support
-Patch7: 0001-Add-ARM-64-support.patch
-
-# truly madly deeply no rpath please, kthxbye
-Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
-
-# filter qml provides
-%global __provides_exclude_from ^%{_qt5_archdatadir}/qml/.*\\.so$
-
-BuildRequires: qt5-qtbase-devel >= %{version}
-BuildRequires: qt5-qtdeclarative-devel >= %{version}
+BuildRequires:  bison
+BuildRequires:  cmake
+BuildRequires:  flex
+BuildRequires:  fontconfig-devel
+BuildRequires:  glib2-devel
+BuildRequires:  gperf
+BuildRequires:  gstreamer1-devel
+BuildRequires:  gstreamer1-plugins-base-devel
+BuildRequires:  hyphen-devel
+BuildRequires:  libicu-devel
+BuildRequires:  libjpeg-devel
+BuildRequires:  libpng-devel
+BuildRequires:  libwebp-devel
+BuildRequires:  libXcomposite-devel
+BuildRequires:  libXrender-devel
+BuildRequires:  libxslt-devel
+BuildRequires:  mesa-libGL-devel
+BuildRequires:  perl-generators
+BuildRequires:  pkgconfig
+BuildRequires:  python2
+BuildRequires:  qt5-qtbase-devel
+BuildRequires:  qt5-qtdeclarative-devel
 %if ! 0%{?bootstrap}
-BuildRequires: pkgconfig(Qt5Sensors)
-BuildRequires: pkgconfig(Qt5Location)
-BuildRequires: pkgconfig(Qt5WebChannel)
+BuildRequires:  qt5-qtlocation-devel
+BuildRequires:  qt5-qtsensors-devel
+BuildRequires:  qt5-qtwebchannel-devel
 %endif
-BuildRequires: bison
-BuildRequires: flex
-BuildRequires: gperf
-BuildRequires: libicu-devel
-BuildRequires: libjpeg-devel
-BuildRequires: pkgconfig(gio-2.0) pkgconfig(glib-2.0)
-BuildRequires: pkgconfig(fontconfig)
-BuildRequires: pkgconfig(gl)
-# gstreamer media support
-%if 0%{?fedora} > 20 || 0%{?rhel} > 7
-BuildRequires: pkgconfig(gstreamer-1.0) pkgconfig(gstreamer-app-1.0)
-%else
-BuildRequires: pkgconfig(gstreamer-0.10) pkgconfig(gstreamer-app-0.10)
-%endif
-BuildRequires: pkgconfig(libpng)
-BuildRequires: pkgconfig(libpcre)
-BuildRequires: pkgconfig(libudev)
-%if 0%{?fedora} || 0%{?rhel} > 6
-BuildRequires: pkgconfig(libwebp)
-%endif
-BuildRequires: pkgconfig(libxslt)
-BuildRequires: pkgconfig(sqlite3)
-BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
-BuildRequires: perl perl(version)
-BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
-BuildRequires: python
-BuildRequires: ruby rubypick rubygems
-BuildRequires: zlib-devel
+BuildRequires:  ruby-devel
+BuildRequires:  rubygems
+BuildRequires:  rubypick
+BuildRequires:  sqlite-devel
+BuildRequires:  zlib-devel
 
-BuildRequires: qt5-qtbase-private-devel
+BuildRequires:  qt5-qtbase-private-devel
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
 BuildRequires:  qt5-qtdeclarative-private-devel
 %{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
 
-##upstream patches
+
+# filter qml provides
+%global __provides_exclude_from ^%{_qt5_archdatadir}/qml/.*\\.so$
+
+# We're supposed to specify versions here, but these crap Google libs don't do
+# normal releases. Accordingly, they're not suitable to be system libs.
+Provides:       bundled(angle)
+Provides:       bundled(brotli)
+Provides:       bundled(woff2)
 
 
 %description
 %{summary}
 
-%package devel
-Summary: Development files for %{name}
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: qt5-qtbase-devel%{?_isa}
-Requires: qt5-qtdeclarative-devel%{?_isa}
-%description devel
-%{summary}.
+%package        devel
+Summary:        Development files for %{name}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       qt5-qtbase-devel%{?_isa}
+Requires:       qt5-qtdeclarative-devel%{?_isa}
+# Why does this not work automatically?
+Provides:       pkgconfig(Qt5WebKit) = %{version}-%{release}
+Provides:       pkgconfig(Qt5WebKitWidgets) = %{version}-%{release}
+
+%description    devel
+The %{name}-devel package contains libraries and header files for
+developing applications that use %{name}.
 
 %if 0%{?docs}
 %package doc
@@ -93,88 +93,107 @@ Summary: API documentation for %{name}
 BuildRequires: qt5-qdoc
 BuildRequires: qt5-qhelpgenerator
 BuildArch: noarch
+
 %description doc
 %{summary}.
 %endif
 
 
 %prep
-%setup -q -n %{qt_module}-opensource-src-%{version}
-
-%patch1 -p1 -b .pluginpath
-%patch3 -p1 -b .debuginfo
-%patch4 -p1 -b .save_memory
-%patch7 -p1 -b .aarch64
-%patch8 -p1 -b .no_rpath
-
-echo "nuke bundled code..."
-# nuke bundled code
-mkdir Source/ThirdParty/orig
-mv Source/ThirdParty/{gtest/,qunit/} \
-   Source/ThirdParty/orig/
-
-if [ ! -d include ]; then
-syncqt.pl -version %{version} Source/sync.profile
-fi
+%autosetup -p1 -n %{qt_module}-%{version}%{?prerel_tag}
 
 
 %build
-mkdir %{_target_platform}
-pushd %{_target_platform}
+# The following changes of optflags ietc. are adapted from webkitgtk4 package, which
+# is mostly similar to this one...
+#
+# Increase the DIE limit so our debuginfo packages could be size optimized.
+# Decreases the size for x86_64 from ~5G to ~1.1G.
+# https://bugzilla.redhat.com/show_bug.cgi?id=1456261
+%global _dwz_max_die_limit 250000000
 
-%{qmake_qt5} .. \
-%ifnarch %{arm} %{ix86} x86_64
-    DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
+# Decrease debuginfo even on ix86 because of:
+# https://bugs.webkit.org/show_bug.cgi?id=140176
+%ifarch s390 s390x %{arm} %{ix86} ppc %{power64} %{mips}
+# Decrease debuginfo verbosity to reduce memory consumption even more
+%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
 
-# workaround, disable parallel compilation as it fails to compile in brew
-#make %{?_smp_mflags}
-make -j3
+%ifarch ppc
+# Use linker flag -relax to get WebKit build under ppc(32) with JIT disabled
+%global optflags %{optflags} -Wl,-relax
+%endif
+
+%{cmake} -DPORT=Qt \
+       -DCMAKE_BUILD_TYPE=Release \
+       -DENABLE_TOOLS=OFF \
+       -DINCLUDE_INSTALL_DIR:PATH=%{_qt5_headerdir} \
+       -DLIBEXEC_INSTALL_DIR:PATH=%{_qt5_libexecdir} \
+       -DECM_MKSPECS_INSTALL_DIR:PATH=%{_qt5_archdatadir}/mkspecs/modules \
+       -DQML_INSTALL_DIR:PATH=%{_qt5_qmldir} \
+%ifarch s390 s390x ppc %{power64}
+       -DENABLE_JIT=OFF \
+%endif
+%ifarch s390 s390x ppc %{power64}
+       -DUSE_SYSTEM_MALLOC=ON \
+%endif
+%if 0%{?docs}
+        -DGENERATE_DOCUMENTATION=ON \
+%endif
+       .
+
+%make_build
 
 %if 0%{?docs}
-make %{?_smp_mflags} docs
+%make_build docs
 %endif
-popd
 
 
 %install
-make install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
+%make_install
 
-%if 0%{?docs}
-make install_docs INSTALL_ROOT=%{buildroot} -C %{_target_platform}
-%endif
+find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
-## .prl/.la file love
-# nuke .prl reference(s) to %%buildroot, excessive (.la-like) libs
-pushd %{buildroot}%{_qt5_libdir}
-for prl_file in libQt5*.prl ; do
-  sed -i -e "/^QMAKE_PRL_BUILD_DIR/d" ${prl_file}
-  if [ -f "$(basename ${prl_file} .prl).so" ]; then
-    rm -fv "$(basename ${prl_file} .prl).la"
-    sed -i -e "/^QMAKE_PRL_LIBS/d" ${prl_file}
-  fi
-done
-popd
+# Finally, copy over and rename various files for %%license inclusion
+%add_to_license_files Source/JavaScriptCore/COPYING.LIB
+%add_to_license_files Source/JavaScriptCore/icu/LICENSE
+%add_to_license_files Source/ThirdParty/ANGLE/LICENSE
+%add_to_license_files Source/ThirdParty/ANGLE/src/third_party/compiler/LICENSE
+%add_to_license_files Source/ThirdParty/ANGLE/src/third_party/murmurhash/LICENSE
+%add_to_license_files Source/WebCore/icu/LICENSE
+%add_to_license_files Source/WebCore/LICENSE-APPLE
+%add_to_license_files Source/WebCore/LICENSE-LGPL-2
+%add_to_license_files Source/WebCore/LICENSE-LGPL-2.1
+%add_to_license_files Source/WebInspectorUI/UserInterface/External/CodeMirror/LICENSE
+%add_to_license_files Source/WebInspectorUI/UserInterface/External/Esprima/LICENSE
+%add_to_license_files Source/WTF/icu/LICENSE
+%add_to_license_files Source/WTF/wtf/dtoa/COPYING
+%add_to_license_files Source/WTF/wtf/dtoa/LICENSE
+
 
 %post -p /sbin/ldconfig
+
 %postun -p /sbin/ldconfig
 
+
 %files
-%license Source/WebCore/LICENSE*
-%doc ChangeLog* VERSION
+%license LICENSE.LGPLv21 _license_files/*
 %{_qt5_libdir}/libQt5WebKit.so.5*
 %{_qt5_libdir}/libQt5WebKitWidgets.so.5*
+%{_qt5_libexecdir}/QtWebDatabaseProcess
+%{_qt5_libexecdir}/QtWebNetworkProcess
 %{_qt5_libexecdir}/QtWebPluginProcess
 %{_qt5_libexecdir}/QtWebProcess
 %{_qt5_archdatadir}/qml/QtWebKit/
 
+
 %files devel
 %{_qt5_headerdir}/Qt*/
 %{_qt5_libdir}/libQt5*.so
-%{_qt5_libdir}/libQt5*.prl
 %{_qt5_libdir}/cmake/Qt5*/
 %{_qt5_libdir}/pkgconfig/Qt5*.pc
 %{_qt5_archdatadir}/mkspecs/modules/*.pri
+
 
 %if 0%{?docs}
 %files doc
@@ -184,8 +203,32 @@ popd
 
 
 %changelog
-* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.7.1-6
+* Thu Jun 22 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.4.alpha2
+- BR: pkg-config
+
+* Wed Jun 21 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.3.alpha2
+- ensure that we do a release build
+
+* Wed Jun 21 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.2.alpha2
+- few spec adjustments
+
+* Sun Jun 18 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.1.alpha2
+- switch to maintained annulen branch of qtwebkit
+
+* Sat Jun 10 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.9.0-1
+- 5.9.0 (final)
+
+* Sun May 28 2017 Helio Chissini de Castro <helio@kde.org> - 5.9.0-0.1.rc
+- Release candidate community
+
+* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9.0-0.beta.3.1
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_27_Mass_Rebuild
+
+* Wed May 10 2017 Helio Chissini de Castro <helio@kde.org> - 5.9.0-0.beta.3
+- Community beta3
+
+* Thu Mar 30 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.8.0-1
+- 5.8.0
 
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
