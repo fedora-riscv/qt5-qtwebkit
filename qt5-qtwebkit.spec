@@ -33,7 +33,7 @@ BuildRequires:  pkgconfig(gstreamer-1.0)
 BuildRequires:  pkgconfig(gstreamer-app-1.0)
 BuildRequires:  hyphen-devel
 BuildRequires:  pkgconfig(icu-i18n) pkgconfig(icu-uc)
-BuildRequires:  pkgconfig(libjpeg)
+BuildRequires:  libjpeg-devel 
 BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(libwebp)
 BuildRequires:  pkgconfig(xcomposite)
