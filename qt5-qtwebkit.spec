@@ -159,11 +159,11 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 # fix pkgconfig files
 sed -i '/Name/a Description: Qt5 WebKit module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
-sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKit,Cflags: -I%{_qt5_includedir}/QtWebKit,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKit,Cflags: -I%{_qt5_headerdir}/QtWebKit,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
 sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKit,Libs: -L%{_qt5_libdir} -lQt5WebKit ,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
 
 sed -i '/Name/a Description: Qt5 WebKitWidgets module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
-sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKitWidgets,Cflags: -I%{_qt5_includedir}/QtWebKitWidgets,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
+sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKitWidgets,Cflags: -I%{_qt5_headerdir}/QtWebKitWidgets,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
 sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdir} -lQt5WebKitWidgets ,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
 
 # Finally, copy over and rename various files for %%license inclusion
