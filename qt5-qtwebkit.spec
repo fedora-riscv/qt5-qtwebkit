@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.4.%{?prerel}%{?dist}
+Release:        0.5.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -25,35 +25,37 @@ Source0:        %{url}/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%
 BuildRequires:  bison
 BuildRequires:  cmake
 BuildRequires:  flex
-BuildRequires:  fontconfig-devel
-BuildRequires:  glib2-devel
+BuildRequires:  pkgconfig(fontconfig)
+BuildRequires:  pkgconfig(gio-2.0)
+BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  gperf
-BuildRequires:  gstreamer1-devel
-BuildRequires:  gstreamer1-plugins-base-devel
+BuildRequires:  pkgconfig(gstreamer-1.0)
+BuildRequires:  pkgconfig(gstreamer-app-1.0)
 BuildRequires:  hyphen-devel
-BuildRequires:  libicu-devel
-BuildRequires:  libjpeg-devel
-BuildRequires:  libpng-devel
-BuildRequires:  libwebp-devel
-BuildRequires:  libXcomposite-devel
-BuildRequires:  libXrender-devel
-BuildRequires:  libxslt-devel
-BuildRequires:  mesa-libGL-devel
+BuildRequires:  pkgconfig(icu-i18n) pkgconfig(icu-uc)
+BuildRequires:  pkgconfig(libjpeg)
+BuildRequires:  pkgconfig(libpng)
+BuildRequires:  pkgconfig(libwebp)
+BuildRequires:  pkgconfig(xcomposite)
+BuildRequires:  pkgconfig(xrender)
+BuildRequires:  pkgconfig(libxslt)
+BuildRequires:  pkgconfig(gl)
 BuildRequires:  perl-generators
-BuildRequires:  pkgconfig
 BuildRequires:  python2
 BuildRequires:  qt5-qtbase-devel
-BuildRequires:  qt5-qtdeclarative-devel
+BuildRequires:  pkgconfig(Qt5Quick)
 %if ! 0%{?bootstrap}
-BuildRequires:  qt5-qtlocation-devel
-BuildRequires:  qt5-qtsensors-devel
-BuildRequires:  qt5-qtwebchannel-devel
+BuildRequires:  pkgconfig(Qt5Location)
+BuildRequires:  pkgconfig(Qt5Sensors)
+BuildRequires:  pkgconfig(Qt5WebChannel)
 %endif
-BuildRequires:  ruby-devel
+BuildRequires:  pkgconfig(ruby)
 BuildRequires:  rubygems
+%if 0%{?fedora}
 BuildRequires:  rubypick
-BuildRequires:  sqlite-devel
-BuildRequires:  zlib-devel
+%endif
+BuildRequires:  pkgconfig(sqlite3)
+BuildRequires:  pkgconfig(zlib)
 
 BuildRequires:  qt5-qtbase-private-devel
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
@@ -79,9 +81,6 @@ Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       qt5-qtbase-devel%{?_isa}
 Requires:       qt5-qtdeclarative-devel%{?_isa}
-# Why does this not work automatically?
-Provides:       pkgconfig(Qt5WebKit) = %{version}-%{release}
-Provides:       pkgconfig(Qt5WebKitWidgets) = %{version}-%{release}
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
@@ -124,13 +123,17 @@ BuildArch: noarch
 %global optflags %{optflags} -Wl,-relax
 %endif
 
-%{cmake} -DPORT=Qt \
+CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
+CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
+%{?__global_ldflags:LDFLAGS="${LDFLAGS:-%__global_ldflags}" ; export LDFLAGS ;}
+# We cannot use default cmake macro here as it overwrites some settings queried
+# by qtwebkit cmake from qmake
+cmake -DPORT=Qt \
        -DCMAKE_BUILD_TYPE=Release \
        -DENABLE_TOOLS=OFF \
-       -DINCLUDE_INSTALL_DIR:PATH=%{_qt5_headerdir} \
-       -DLIBEXEC_INSTALL_DIR:PATH=%{_qt5_libexecdir} \
-       -DECM_MKSPECS_INSTALL_DIR:PATH=%{_qt5_archdatadir}/mkspecs/modules \
-       -DQML_INSTALL_DIR:PATH=%{_qt5_qmldir} \
+       -DCMAKE_C_FLAGS_RELEASE:STRING="-DNDEBUG" \
+       -DCMAKE_CXX_FLAGS_RELEASE:STRING="-DNDEBUG" \
+       -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
 %ifarch s390 s390x ppc %{power64}
        -DENABLE_JIT=OFF \
 %endif
@@ -138,7 +141,7 @@ BuildArch: noarch
        -DUSE_SYSTEM_MALLOC=ON \
 %endif
 %if 0%{?docs}
-        -DGENERATE_DOCUMENTATION=ON \
+       -DGENERATE_DOCUMENTATION=ON \
 %endif
        .
 
@@ -153,6 +156,15 @@ BuildArch: noarch
 %make_install
 
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
+
+# fix pkgconfig files
+sed -i '/Name/a Description: Qt5 WebKit module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+sed -i "s,Cflags: -I/usr/lib/qt5/../../include/qt5/Qt5WebKit,Cflags: -I%{_qt5_includedir}/QtWebKit,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+sed -i "s,Libs: -L/usr/lib/qt5/../ -lQt5WebKit,Libs: -L%{_qt5_libdir} -lQt5WebKit ,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+
+sed -i '/Name/a Description: Qt5 WebKitWidgets module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
+sed -i "s,Cflags: -I/usr/lib/qt5/../../include/qt5/Qt5WebKitWidgets,Cflags: -I%{_qt5_includedir}/QtWebKitWidgets,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
+sed -i "s,Libs: -L/usr/lib/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdir} -lQt5WebKitWidgets ,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
 
 # Finally, copy over and rename various files for %%license inclusion
 %add_to_license_files Source/JavaScriptCore/COPYING.LIB
@@ -203,6 +215,10 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Mon Jul 10 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.5.alpha2
+- replaced ugly pkgconfig provides workaround with proper pkgconfig fixes
+- general spec fixes
+
 * Thu Jun 22 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.4.alpha2
 - BR: pkg-config
 
