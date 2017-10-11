@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.6.%{?prerel}%{?dist}
+Release:        0.10.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -33,7 +33,7 @@ BuildRequires:  pkgconfig(gstreamer-1.0)
 BuildRequires:  pkgconfig(gstreamer-app-1.0)
 BuildRequires:  hyphen-devel
 BuildRequires:  pkgconfig(icu-i18n) pkgconfig(icu-uc)
-BuildRequires:  libjpeg-devel 
+BuildRequires:  libjpeg-devel
 BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(libwebp)
 BuildRequires:  pkgconfig(xcomposite)
@@ -48,12 +48,21 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Location)
 BuildRequires:  pkgconfig(Qt5Sensors)
 BuildRequires:  pkgconfig(Qt5WebChannel)
+<<<<<<< HEAD
 %endif
 BuildRequires:  pkgconfig(ruby)
 BuildRequires:  rubygems
 %if 0%{?fedora}
 BuildRequires:  rubypick
 %endif
+=======
+%endif
+BuildRequires:  pkgconfig(ruby)
+BuildRequires:  rubygems
+%if 0%{?fedora}
+BuildRequires:  rubypick
+%endif
+>>>>>>> f27
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(zlib)
 
@@ -215,8 +224,21 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
-* Sun Oct 08 2017 Daniel Vrátil <dvratil@fedoraproject.org> - 5.212.0-0.6.alpha2
-- Qt 5.9.1 rebuild
+* Mon Oct 09 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.10.alpha2
+- rebuild (qt5)
+
+* Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.9.alpha2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
+
+* Thu Jul 27 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.8.alpha2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Thu Jul 20 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.7.alpha2
+- rebuild against newer gcc/ppc64le (#1470692)
+
+* Wed Jul 19 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.6.alpha2
+- rebuild (qt-5.9.1)
+
 
 * Mon Jul 10 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.5.alpha2
 - replaced ugly pkgconfig provides workaround with proper pkgconfig fixes
