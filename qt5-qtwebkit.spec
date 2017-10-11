@@ -48,21 +48,12 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  pkgconfig(Qt5Location)
 BuildRequires:  pkgconfig(Qt5Sensors)
 BuildRequires:  pkgconfig(Qt5WebChannel)
-<<<<<<< HEAD
 %endif
 BuildRequires:  pkgconfig(ruby)
 BuildRequires:  rubygems
 %if 0%{?fedora}
 BuildRequires:  rubypick
 %endif
-=======
-%endif
-BuildRequires:  pkgconfig(ruby)
-BuildRequires:  rubygems
-%if 0%{?fedora}
-BuildRequires:  rubypick
-%endif
->>>>>>> f27
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(zlib)
 
@@ -238,7 +229,6 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 * Wed Jul 19 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.6.alpha2
 - rebuild (qt-5.9.1)
-
 
 * Mon Jul 10 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.5.alpha2
 - replaced ugly pkgconfig provides workaround with proper pkgconfig fixes
