@@ -15,12 +15,18 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.10.%{?prerel}%{?dist}
+Release:        0.11.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
 URL:            https://github.com/annulen/webkit
 Source0:        %{url}/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%{qt_module}-%{version}%{?prerel_tag}.tar.xz
+
+# Upstream patch to fix pagewidth issue with trojita
+# https://github.com/annulen/webkit/issues/511
+# https://github.com/annulen/webkit/commit/6faf11215e1af27d35e921ae669aa0251a01a1ab
+# https://github.com/annulen/webkit/commit/76420459a13d9440b41864c93cb4ebb404bdab55
+Patch0:         qt5-qtwebkit-fix-pagewidth.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
@@ -215,6 +221,9 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
+* Mon Oct 23 2017 Christian Dersch <lupinix@mailbox.org> - 5.212.0-0.11.alpha2
+- Added patch to fix issue with pagewidth (#1502332)
+
 * Mon Oct 09 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.10.alpha2
 - rebuild (qt5)
 
