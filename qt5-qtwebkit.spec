@@ -26,7 +26,7 @@ Source0:        %{url}/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%
 # https://github.com/annulen/webkit/issues/511
 # https://github.com/annulen/webkit/commit/6faf11215e1af27d35e921ae669aa0251a01a1ab
 # https://github.com/annulen/webkit/commit/76420459a13d9440b41864c93cb4ebb404bdab55
-Patch0:         qt5-qtwebkit-5.212.0-fix-pagewidth.patch
+Patch0:         qt5-qtwebkit-5.212.0-alpha2-fix-pagewidth.patch
 
 # Patch from Kevin Kofler to fix https://github.com/annulen/webkit/issues/573
 Patch1:         qtwebkit-5.212.0-alpha2-fix-null-pointer-dereference.patch
