@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.14.%{?prerel}%{?dist}
+Release:        0.15.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -30,6 +30,12 @@ Patch0:         qt5-qtwebkit-5.212.0-alpha2-fix-pagewidth.patch
 
 # Patch from Kevin Kofler to fix https://github.com/annulen/webkit/issues/573
 Patch1:         qtwebkit-5.212.0-alpha2-fix-null-pointer-dereference.patch
+
+# Patch for new CMake policy CMP0071 to explicitly use old behaviour.
+Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
+
+# Patch to fix for missing source file.
+Patch3:         qtwebkit-5.212.0_fix_missing_sources.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
@@ -49,6 +55,8 @@ BuildRequires:  pkgconfig(xcomposite)
 BuildRequires:  pkgconfig(xrender)
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(gl)
+BuildRequires:  pkgconfig(gstreamer-gl-1.0)
+BuildRequires:  pkgconfig(gstreamer-mpegts-1.0)
 BuildRequires:  perl-generators
 BuildRequires:  python2
 BuildRequires:  qt5-qtbase-devel
@@ -221,6 +229,11 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
+* Sun Nov 26 2017 Björn Esser <besser82@fedoraproject.org> - 5.212.0-0.15.alpha2
+- Add patch2 to fix CMake warnings
+- Add patch3 to fix build (missing src file caused by typo)
+- Add missing BuildRequires
+
 * Sun Nov 26 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.14.alpha2
 - rebuild (qt5)
 
