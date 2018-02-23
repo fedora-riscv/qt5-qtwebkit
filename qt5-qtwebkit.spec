@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.15.%{?prerel}%{?dist}
+Release:        0.20.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -36,6 +36,9 @@ Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
 
 # Patch to fix for missing source file.
 Patch3:         qtwebkit-5.212.0_fix_missing_sources.patch
+
+# disable ES6 Proxy
+Patch31: 0031-Disable-ES6-Proxy-object.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
@@ -229,6 +232,21 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
+* Fri Feb 23 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.20.alpha2
+- Bad ES6 Proxy object for QT platform breaks scudcloud (#1513091)
+
+* Wed Feb 14 2018 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.19.alpha2
+- rebuild (qt5)
+
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.18.alpha2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
+* Wed Dec 20 2017 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.17.alpha2
+- rebuild (qt5)
+
+* Thu Nov 30 2017 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.16.alpha2
+- Rebuild for ICU 60.1
+
 * Sun Nov 26 2017 Björn Esser <besser82@fedoraproject.org> - 5.212.0-0.15.alpha2
 - Add patch2 to fix CMake warnings
 - Add patch3 to fix build (missing src file caused by typo)
