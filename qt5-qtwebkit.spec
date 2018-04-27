@@ -3,40 +3,15 @@
 
 %global _hardened_build 1
 
-#global bootstrap 1
-
-# define to build docs, need to undef this for bootstrapping
-# where qt5-qttools builds are not yet available
-# only primary archs (for now), allow secondary to bootstrap
-%if ! 0%{?bootstrap}
-%ifarch %{arm} %{ix86} x86_64
-%define docs 1
-%endif
-%endif
-
-%global commit0 b889f460280ad98c89ede179bd3b9ce9cb02002b
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-
 Summary: Qt5 - QtWebKit components
-Name:    qt5-qtwebkit
-Version: 5.6.1
-Release: 3.%{shortcommit0}git%{?dist}
+Name: qt5-qtwebkit
+Version: 5.9.0
+Release: 1%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
 License: LGPLv2 with exceptions or GPLv3 with exceptions
-Url: http://www.qt.io
-%if 0%{?commit0:1}
-# The source for this package was pulled from upstream's vcs.  Use the
-# following commands to generate the tarball:
-# git clone git@github.com:qtproject/qtqebkit.git && cd qtwebkit
-# git archive --prefix=qtwebkit-opensource-src-5.6.1/ origin/5.6.1 | tar -x -C ..
-# cd ../qtwebkit-opensource-src-5.6.1 && syncqt.pl -version 5.6.1 Source/sync.profile && cd ..
-# tar cfJ qt5-webkit-opensource-src-5.6.1.tar.xz qtwebkit-opensource-src-5.6.1/
-Source0: %{qt_module}-opensource-src-%{version}-%{shortcommit0}.tar.xz
-%else
-Source0: http://download.qt.io/community_releases/5.6/%{version}/qtwebkit-opensource-src-%{version}.tar.xz
-%endif
+Source0: http://download.qt.io/community_releases/5.9/%{version}-final/%{qt_module}-opensource-src-%{version}.tar.xz
 
 ## downstream patches
 # Search /usr/lib{,64}/mozilla/plugins-wrapped for browser plugins too
@@ -54,17 +29,15 @@ Patch7: 0001-Add-ARM-64-support.patch
 # truly madly deeply no rpath please, kthxbye
 Patch8: qtwebkit-opensource-src-5.2.1-no_rpath.patch
 
-## upstream patches
-Patch105: 0005-Added-missing-break-statement.patch
-Patch109: 0009-Fixed-drawing-of-zoomed-border-image-with-repeat-mod.patch
+# filter qml provides
+%global __provides_exclude_from ^%{_qt5_archdatadir}/qml/.*\\.so$
 
-BuildRequires: cmake
 BuildRequires: qt5-qtbase-devel >= %{version}
 BuildRequires: qt5-qtdeclarative-devel >= %{version}
 %if ! 0%{?bootstrap}
-BuildRequires: qt5-qtsensors-devel
-BuildRequires: qt5-qtlocation-devel
-BuildRequires: qt5-qtwebchannel-devel
+BuildRequires: pkgconfig(Qt5Sensors)
+BuildRequires: pkgconfig(Qt5Location)
+BuildRequires: pkgconfig(Qt5WebChannel)
 %endif
 BuildRequires: bison
 BuildRequires: flex
@@ -91,19 +64,17 @@ BuildRequires: pkgconfig(sqlite3)
 BuildRequires: pkgconfig(xcomposite) pkgconfig(xrender)
 BuildRequires: perl perl(version)
 BuildRequires: perl(Digest::MD5) perl(Text::ParseWords) perl(Getopt::Long)
+BuildRequires: python
 BuildRequires: ruby rubygems
 %if 0%{?fedora}
 BuildRequires: rubypick
 %endif
 BuildRequires: zlib-devel
 
-BuildRequires:  qt5-qtbase-private-devel
+BuildRequires: qt5-qtbase-private-devel
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
 BuildRequires:  qt5-qtdeclarative-private-devel
 %{?_qt5:Requires: qt5-qtdeclarative%{?_isa} = %{_qt5_version}}
-
-##upstream patches
-
 
 %description
 %{summary}
@@ -130,9 +101,6 @@ BuildArch: noarch
 %prep
 %setup -q -n %{qt_module}-opensource-src-%{version}
 
-%patch105 -p1 -b .0005
-%patch109 -p1 -b .0009
-
 %patch1 -p1 -b .pluginpath
 %patch3 -p1 -b .debuginfo
 %patch4 -p1 -b .save_memory
@@ -156,7 +124,7 @@ pushd %{_target_platform}
 
 %{qmake_qt5} .. \
 %ifnarch %{arm} %{ix86} x86_64
-	DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
+    DEFINES+=ENABLE_JIT=0 DEFINES+=ENABLE_YARR_JIT=0
 %endif
 
 # workaround, disable parallel compilation as it fails to compile in brew
@@ -216,8 +184,42 @@ popd
 
 
 %changelog
-* Wed Jun 15 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-3.b889f46git
-- drop pkgconfig-style deps
+* Sat Jun 10 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.9.0-1
+- 5.9.0 (final)
+
+* Sun May 28 2017 Helio Chissini de Castro <helio@kde.org> - 5.9.0-0.1.rc
+- Release candidate community
+
+* Mon May 15 2017 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9.0-0.beta.3.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_27_Mass_Rebuild
+
+* Wed May 10 2017 Helio Chissini de Castro <helio@kde.org> - 5.9.0-0.beta.3
+- Community beta3
+
+* Thu Mar 30 2017 Rex Dieter <rdieter@fedoraproject.org> - 5.8.0-1
+- 5.8.0
+
+* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 5.7.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Wed Feb 01 2017 Sandro Mani <manisandro@gmail.com> - 5.7.1-4
+- Rebuild (libwebp)
+
+* Mon Jan 02 2017 Rex Dieter <rdieter@math.unl.edu> - 5.7.1-3
+- filter qml provides, BR: qtdeclarative python expicitly
+
+* Sat Dec 10 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.7.1-2
+- drop BR: cmake (handled by qt5-rpm-macros now)
+- 5.7.1 dec5 snapshot
+
+* Wed Nov 09 2016 Helio Chissini de Castro <helio@kde.org> - 5.7.1-1
+- New upstream version
+
+* Mon Jul 04 2016 Helio Chissini de Castro <helio@kde.org> - 5.7.0-2
+- Compiled with gcc
+
+* Wed Jun 15 2016 Helio Chissini de Castro <helio@kde.org> - 5.7.0-1
+- Qt 5.7.0 release ( non git, official package )
 
 * Tue Jun 14 2016 Rex Dieter <rdieter@fedoraproject.org> - 5.6.1-2.b889f46git
 - rebuild (glibc)
