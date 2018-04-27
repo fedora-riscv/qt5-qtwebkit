@@ -1,0 +1,49 @@
+From da5f9d788f96340a44083ed4e28cdf6ea0a393f0 Mon Sep 17 00:00:00 2001
+From: Konstantin Tokarev <annulen@yandex.ru>
+Date: Tue, 24 May 2016 15:25:43 +0300
+Subject: [PATCH 9/9] Fixed drawing of zoomed border-image with repeat mode.
+
+Image::drawPattern has special optimized path for scaled transform which
+creates pre-scaled brush and removes scale from original transform.
+However this change makes following translation to (tr.x(), tr.y())
+incorrect because it is expected to be done in scaled coordinate system.
+
+Change-Id: I570cf82a4e7f61f6abe3fa4cb9b39aea0e51f2e5
+Task-number: QTBUG-53532
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+---
+ Source/WebCore/platform/graphics/qt/ImageQt.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Source/WebCore/platform/graphics/qt/ImageQt.cpp b/Source/WebCore/platform/graphics/qt/ImageQt.cpp
+index 9e4408b..f30284b 100644
+--- a/Source/WebCore/platform/graphics/qt/ImageQt.cpp
++++ b/Source/WebCore/platform/graphics/qt/ImageQt.cpp
+@@ -156,6 +156,8 @@ void Image::drawPattern(GraphicsContext* ctxt, const FloatRect& tileRect, const
+     if (tr.x() || tr.y() || tr.width() != pixmap.width() || tr.height() != pixmap.height())
+         pixmap = pixmap.copy(tr);
+ 
++    QPoint trTopLeft = tr.topLeft();
++
+     CompositeOperator previousOperator = ctxt->compositeOperation();
+ 
+     ctxt->setCompositeOperation(!pixmap.hasAlpha() && op == CompositeSourceOver ? CompositeCopy : op);
+@@ -180,13 +182,14 @@ void Image::drawPattern(GraphicsContext* ctxt, const FloatRect& tileRect, const
+                 painter.drawPixmap(QRect(0, 0, scaledPixmap.width(), scaledPixmap.height()), pixmap);
+             }
+             pixmap = scaledPixmap;
++            trTopLeft = transform.map(trTopLeft);
+             transform = QTransform::fromTranslate(transform.dx(), transform.dy());
+         }
+     }
+ 
+     /* Translate the coordinates as phase is not in world matrix coordinate space but the tile rect origin is. */
+     transform *= QTransform().translate(phase.x(), phase.y());
+-    transform.translate(tr.x(), tr.y());
++    transform.translate(trTopLeft.x(), trTopLeft.y());
+ 
+     QBrush b(pixmap);
+     b.setTransform(transform);
+-- 
+2.7.4
+
