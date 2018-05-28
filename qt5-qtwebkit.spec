@@ -141,7 +141,7 @@ BuildArch: noarch
 %endif
 
 CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ;
-CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ;
+CXXFLAGS="${CXXFLAGS:-%optflags} -fpermissive" ; export CXXFLAGS ;
 %{?__global_ldflags:LDFLAGS="${LDFLAGS:-%__global_ldflags}" ; export LDFLAGS ;}
 # We cannot use default cmake macro here as it overwrites some settings queried
 # by qtwebkit cmake from qmake
@@ -232,8 +232,9 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
-* Sun May 27 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.22..alpha2
+* Sun May 27 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.22.alpha2
 - rebuild (qt5)
+- workaround gcc8 FTBFS with -fpermissive (#1582954)
 
 * Mon Apr 30 2018 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.21.alpha2
 - Rebuild for ICU 61.1
