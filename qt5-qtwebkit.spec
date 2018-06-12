@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.20.%{?prerel}%{?dist}
+Release:        0.20.%{?prerel}%{?dist}.1
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -232,6 +232,9 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
+* Tue Jun 12 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.20.alpha2.1
+- (branch) rebuild (qt5)
+
 * Fri Feb 23 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.20.alpha2
 - Bad ES6 Proxy object for QT platform breaks scudcloud (#1513091)
 
