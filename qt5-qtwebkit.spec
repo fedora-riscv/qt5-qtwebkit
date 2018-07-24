@@ -15,7 +15,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.25.%{?prerel}%{?dist}
+Release:        0.26.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -37,8 +37,14 @@ Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
 # Patch to fix for missing source file.
 Patch3:         qtwebkit-5.212.0_fix_missing_sources.patch
 
+## upstream patches (qtwebkit-5.212 branch)
+Patch16: 0016-cmake-Import-ECMEnableSanitizers.patch
 # disable ES6 Proxy
 Patch31: 0031-Disable-ES6-Proxy-object.patch
+Patch111: 0111-ECM-Update-ECMGeneratePkgConfigFile-to-latest-versio.patch
+
+## upstream patches (qtwebkit-stable branch)
+Patch212: 0012-cmake-Fix-include-dir-in-the-generated-pkg-config-fi.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
@@ -175,12 +181,13 @@ cmake -DPORT=Qt \
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 # fix pkgconfig files
-sed -i '/Name/a Description: Qt5 WebKit module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
-sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKit,Cflags: -I%{_qt5_headerdir}/QtWebKit,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+#sed -i '/Name/a Description: Qt5 WebKit module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+#sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKit,Cflags: -I%{_qt5_headerdir}/QtWebKit,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
+# strictly speaking, this isn't *wrong*, but can made more readable, so let's do that
 sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKit,Libs: -L%{_qt5_libdir} -lQt5WebKit ,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKit.pc
 
-sed -i '/Name/a Description: Qt5 WebKitWidgets module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
-sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKitWidgets,Cflags: -I%{_qt5_headerdir}/QtWebKitWidgets,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
+#sed -i '/Name/a Description: Qt5 WebKitWidgets module' %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
+#sed -i "s,Cflags: -I%{_qt5_libdir}/qt5/../../include/qt5/Qt5WebKitWidgets,Cflags: -I%{_qt5_headerdir}/QtWebKitWidgets,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
 sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdir} -lQt5WebKitWidgets ,g" %{buildroot}%{_libdir}/pkgconfig/Qt5WebKitWidgets.pc
 
 # Finally, copy over and rename various files for %%license inclusion
@@ -200,10 +207,13 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 %add_to_license_files Source/WTF/wtf/dtoa/LICENSE
 
 
-%post -p /sbin/ldconfig
+%check
+# verify Qt5WebKit cflags non-use of -I/.../Qt5WebKit
+export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig
+test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
-%postun -p /sbin/ldconfig
 
+%ldconfig_scriptlets
 
 %files
 %license LICENSE.LGPLv21 _license_files/*
@@ -232,6 +242,10 @@ sed -i "s,Libs: -L%{_qt5_libdir}/qt5/../ -lQt5WebKitWidgets,Libs: -L%{_qt5_libdi
 
 
 %changelog
+* Tue Jul 24 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.26.alpha2
+- backport some pkgconfig-related upstream fixes
+- use %%ldconfig_scriptlets
+
 * Sat Jul 14 2018 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.25.alpha2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
