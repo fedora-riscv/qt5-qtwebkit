@@ -1,3 +1,4 @@
+%undefine _annotated_build
 
 %global qt_module qtwebkit
 
@@ -15,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.26.%{?prerel}%{?dist}
+Release:        0.27.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -242,6 +243,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Wed Jul 25 2018 Christian Dersch <lupinix@fedoraproject.org> - 5.212.0-0.27.alpha2
+- Disable annobin for now, workaround for RHBZ #1608549
+
 * Tue Jul 24 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.26.alpha2
 - backport some pkgconfig-related upstream fixes
 - use %%ldconfig_scriptlets
