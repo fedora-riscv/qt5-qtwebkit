@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.27.%{?prerel}%{?dist}
+Release:        0.28.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -70,11 +70,11 @@ BuildRequires:  pkgconfig(gstreamer-mpegts-1.0)
 BuildRequires:  perl-generators
 BuildRequires:  python2
 BuildRequires:  qt5-qtbase-devel
-BuildRequires:  pkgconfig(Qt5Quick)
+BuildRequires:  qt5-qtdeclarative-devel
 %if ! 0%{?bootstrap}
-BuildRequires:  pkgconfig(Qt5Location)
-BuildRequires:  pkgconfig(Qt5Sensors)
-BuildRequires:  pkgconfig(Qt5WebChannel)
+BuildRequires:  qt5-qtlocation-devel
+BuildRequires:  qt5-qtsensors-devel
+BuildRequires:  qt5-qtwebchannel-devel
 %endif
 BuildRequires:  pkgconfig(ruby)
 BuildRequires:  rubygems
@@ -243,6 +243,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Tue Aug 21 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.28.alpha2
+- revert to real package names for core qt5 deps
+
 * Wed Jul 25 2018 Christian Dersch <lupinix@fedoraproject.org> - 5.212.0-0.27.alpha2
 - Disable annobin for now, workaround for RHBZ #1608549
 
