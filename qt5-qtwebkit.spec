@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.29.%{?prerel}%{?dist}
+Release:        0.30.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -80,6 +80,9 @@ BuildRequires:  pkgconfig(ruby)
 BuildRequires:  rubygems
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(zlib)
+# workaround bad embedded png files, https://bugzilla.redhat.com/1639422
+BuildRequires:  findutils
+BuildRequires:  pngcrush
 
 BuildRequires:  qt5-qtbase-private-devel
 %{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
@@ -124,6 +127,9 @@ BuildArch: noarch
 
 %prep
 %autosetup -p1 -n %{qt_module}-%{version}%{?prerel_tag}
+
+# find/fix pngs with "libpng warning: iCCP: known incorrect sRGB profile"
+find -name \*.png | xargs -n3 pngcrush -ow -fix
 
 
 %build
@@ -243,6 +249,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Sat Nov 24 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.30.alpha
+- QtWebkit bundles malformed PNG files (#1639422)
+
 * Fri Sep 21 2018 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.29.alpha2
 - rebuild (qt5)
 
