@@ -129,7 +129,7 @@ BuildArch: noarch
 %autosetup -p1 -n %{qt_module}-%{version}%{?prerel_tag}
 
 # find/fix pngs with "libpng warning: iCCP: known incorrect sRGB profile"
-find -name \*.png | xargs -n3 pngcrush -ow -fix
+find -name \*.png | xargs -n1 pngcrush -ow -fix
 
 # ppc64le failed once with
 # make[2]: *** No rule to make target 'Source/WebCore/Resources/textAreaResizeCorner.png', needed by 'Source/WebKit/qrc_WebCore.cpp'.  Stop.
