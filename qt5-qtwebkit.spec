@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.30.%{?prerel}%{?dist}
+Release:        0.31.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -249,6 +249,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Tue Dec 11 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.31.alpha
+- rebuild (qt5)
+
 * Sat Nov 24 2018 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.30.alpha
 - QtWebkit bundles malformed PNG files (#1639422)
 
