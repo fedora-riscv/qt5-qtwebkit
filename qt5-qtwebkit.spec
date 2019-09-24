@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.39.%{?prerel}%{?dist}
+Release:        0.40.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -232,6 +232,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Tue Sep 24 2019 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.40.alpha3
+- rebuild (qt5)
+
 * Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.39.alpha3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
