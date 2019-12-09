@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.40.%{?prerel}%{?dist}
+Release:        0.41.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -232,6 +232,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Mon Dec 09 2019 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.41.alpha3
+- rebuild (qt5)
+
 * Tue Sep 24 2019 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.40.alpha3
 - rebuild (qt5)
 
