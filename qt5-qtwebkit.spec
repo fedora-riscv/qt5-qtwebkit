@@ -31,7 +31,9 @@ BuildRequires:  bison
 BuildRequires:  cmake
 BuildRequires:  flex
 BuildRequires:  pkgconfig(fontconfig)
+%if 0%{?rhel} != 8
 BuildRequires:  pkgconfig(libwoff2dec)
+%endif
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  gperf
