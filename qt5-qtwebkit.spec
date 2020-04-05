@@ -51,6 +51,7 @@ BuildRequires:  pkgconfig(gl)
 BuildRequires:  pkgconfig(gstreamer-gl-1.0)
 BuildRequires:  pkgconfig(gstreamer-mpegts-1.0)
 BuildRequires:  perl-generators
+BuildRequires:  perl(File::Copy)
 BuildRequires:  python2
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
