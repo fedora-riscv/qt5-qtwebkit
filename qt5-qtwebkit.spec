@@ -4,7 +4,7 @@
 
 %global _hardened_build 1
 
-%global prerel alpha3
+%global prerel alpha4
 %global prerel_tag -%{prerel}
 
 ## NOTE: Lots of files in various subdirectories have the same name (such as
@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.43.%{?prerel}%{?dist}
+Release:        0.44.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -25,7 +25,6 @@ Source0:        https://github.com/qtwebkit/qtwebkit/releases/download/%{qt_modu
 
 # Patch for new CMake policy CMP0071 to explicitly use old behaviour.
 Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
-Patch3:         qtwebkit-missing-semicolons.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
@@ -52,7 +51,7 @@ BuildRequires:  pkgconfig(gstreamer-gl-1.0)
 BuildRequires:  pkgconfig(gstreamer-mpegts-1.0)
 BuildRequires:  perl-generators
 BuildRequires:  perl(File::Copy)
-BuildRequires:  python2
+BuildRequires:  python3
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
 %if ! 0%{?bootstrap}
@@ -146,7 +145,8 @@ CXXFLAGS="${CXXFLAGS:-%optflags} -fpermissive" ; export CXXFLAGS ;
 %{?__global_ldflags:LDFLAGS="${LDFLAGS:-%__global_ldflags}" ; export LDFLAGS ;}
 # We cannot use default cmake macro here as it overwrites some settings queried
 # by qtwebkit cmake from qmake
-cmake -DPORT=Qt \
+cmake . \
+       -DPORT=Qt \
        -DCMAKE_BUILD_TYPE=Release \
        -DENABLE_TOOLS=OFF \
        -DCMAKE_C_FLAGS_RELEASE:STRING="-DNDEBUG" \
@@ -158,10 +158,8 @@ cmake -DPORT=Qt \
 %ifarch s390 s390x ppc %{power64}
        -DUSE_SYSTEM_MALLOC=ON \
 %endif
-%if 0%{?docs}
-       -DGENERATE_DOCUMENTATION=ON \
-%endif
-       .
+       %{?docs:-DGENERATE_DOCUMENTATION=ON} \
+       -DPYTHON_EXECUTABLE:PATH="%{__python3}"
 
 %make_build
 
@@ -236,6 +234,10 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Fri Apr 24 2020 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.44.alpha4
+- 5.212.0-alpha4
+- use python3 (#1807535)
+
 * Sun Apr 05 2020 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.43.alpha3
 - rebuild (qt5)
 
