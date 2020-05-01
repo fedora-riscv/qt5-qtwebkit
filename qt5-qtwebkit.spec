@@ -4,7 +4,7 @@
 
 %global _hardened_build 1
 
-%global prerel alpha2
+%global prerel alpha3
 %global prerel_tag -%{prerel}
 
 ## NOTE: Lots of files in various subdirectories have the same name (such as
@@ -16,41 +16,24 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.36.%{?prerel}%{?dist}
+Release:        0.42.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
-URL:            https://github.com/annulen/webkit
-Source0:        %{url}/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%{qt_module}-%{version}%{?prerel_tag}.tar.xz
-
-# Upstream patch to fix pagewidth issue with trojita
-# https://github.com/annulen/webkit/issues/511
-# https://github.com/annulen/webkit/commit/6faf11215e1af27d35e921ae669aa0251a01a1ab
-# https://github.com/annulen/webkit/commit/76420459a13d9440b41864c93cb4ebb404bdab55
-Patch0:         qt5-qtwebkit-5.212.0-alpha2-fix-pagewidth.patch
-
-# Patch from Kevin Kofler to fix https://github.com/annulen/webkit/issues/573
-Patch1:         qtwebkit-5.212.0-alpha2-fix-null-pointer-dereference.patch
+URL:            https://github.com/qtwebkit/qtwebkit
+Source0:        https://github.com/qtwebkit/qtwebkit/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%{qt_module}-%{version}%{?prerel_tag}.tar.xz
 
 # Patch for new CMake policy CMP0071 to explicitly use old behaviour.
 Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
-
-# Patch to fix for missing source file.
-Patch3:         qtwebkit-5.212.0_fix_missing_sources.patch
-
-## upstream patches (qtwebkit-5.212 branch)
-Patch16: 0016-cmake-Import-ECMEnableSanitizers.patch
-# disable ES6 Proxy
-Patch31: 0031-Disable-ES6-Proxy-object.patch
-Patch111: 0111-ECM-Update-ECMGeneratePkgConfigFile-to-latest-versio.patch
-
-## upstream patches (qtwebkit-stable branch)
-Patch212: 0012-cmake-Fix-include-dir-in-the-generated-pkg-config-fi.patch
+Patch3:         qtwebkit-missing-semicolons.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
 BuildRequires:  flex
 BuildRequires:  pkgconfig(fontconfig)
+%if 0%{?rhel} != 8
+BuildRequires:  pkgconfig(libwoff2dec)
+%endif
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  gperf
@@ -230,12 +213,11 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 %license LICENSE.LGPLv21 _license_files/*
 %{_qt5_libdir}/libQt5WebKit.so.5*
 %{_qt5_libdir}/libQt5WebKitWidgets.so.5*
-%{_qt5_libexecdir}/QtWebDatabaseProcess
 %{_qt5_libexecdir}/QtWebNetworkProcess
 %{_qt5_libexecdir}/QtWebPluginProcess
 %{_qt5_libexecdir}/QtWebProcess
+%{_qt5_libexecdir}/QtWebStorageProcess
 %{_qt5_archdatadir}/qml/QtWebKit/
-
 
 %files devel
 %{_qt5_headerdir}/Qt*/
@@ -253,6 +235,24 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.42.alpha3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
+* Mon Dec 09 2019 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.41.alpha3
+- rebuild (qt5)
+
+* Tue Sep 24 2019 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.40.alpha3
+- rebuild (qt5)
+
+* Fri Jul 26 2019 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.39.alpha3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
+* Tue Jul 16 2019 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.38.alpha3
+- rebuild
+
+* Tue Jul 02 2019 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.37.alpha3
+- 5.212.0 alpha 3
+
 * Tue Jun 11 2019 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.36.alpha2
 - rebuild (qt5)
 
