@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.47.%{?prerel}%{?dist}
+Release:        0.48.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -120,6 +120,12 @@ test -f Source/WebCore/Resources/textAreaResizeCorner.png
 
 
 %build
+# QT is known not to work properly with LTO at this point.  Some of the issues
+# are being worked on upstream and disabling LTO should be re-evaluated as
+# we update this change.  Until such time...
+# Disable LTO
+%define _lto_cflags %{nil}
+
 # The following changes of optflags ietc. are adapted from webkitgtk4 package, which
 # is mostly similar to this one...
 #
@@ -234,6 +240,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Wed Jul 01 2020 Jeff Law <law@redhat.com> - 5.212.0-0.48.alpha4
+- Disable LTO
+
 * Wed Jun 03 2020 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.47.alpha4
 - rebuild (python39)
 
