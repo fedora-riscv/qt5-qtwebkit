@@ -26,6 +26,7 @@ Source0:        https://github.com/qtwebkit/qtwebkit/releases/download/%{qt_modu
 # Patch for new CMake policy CMP0071 to explicitly use old behaviour.
 Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
 Patch3:         qtwebkit-5.212.0-json.patch
+Patch4:         qtwebkit-bison37.patch
 
 BuildRequires:  bison
 BuildRequires:  cmake
