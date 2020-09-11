@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.51.%{?prerel}%{?dist}
+Release:        0.52.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -241,6 +241,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Fri Sep 11 2020 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.52.alpha4
+- rebuild (qt5)
+
 * Thu Aug 27 2020 Than Ngo <than@redhat.com> - 5.212.0-0.51.alpha4
 - Fixed #1863719, FTBFS
 
