@@ -28,6 +28,7 @@ Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
 Patch3:         qtwebkit-5.212.0-json.patch
 Patch4:         qtwebkit-bison37.patch
 
+BuildRequires: make
 BuildRequires:  bison
 BuildRequires:  cmake
 BuildRequires:  flex
