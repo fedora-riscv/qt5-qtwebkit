@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.55.%{?prerel}%{?dist}
+Release:        0.56.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -243,6 +243,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Tue Mar 30 2021 Jonathan Wakely <jwakely@redhat.com> - 5.212.0-0.56.alpha4
+- Rebuilt for removed libstdc++ symbol (#1937698)
+
 * Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.55.alpha4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
