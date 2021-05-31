@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.58.%{?prerel}%{?dist}
+Release:        0.59.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -27,6 +27,7 @@ Source0:        https://github.com/qtwebkit/qtwebkit/releases/download/%{qt_modu
 Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
 Patch3:         qtwebkit-5.212.0-json.patch
 Patch4:         qtwebkit-bison37.patch
+Patch5:         qt5-qtwebkit-glib-2.68.patch
 
 BuildRequires: make
 BuildRequires:  bison
@@ -243,6 +244,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Mon May 31 2021 Than Ngo <than@redhat.com> - 5.212.0-0.59.alpha4
+- fix FTBFS against glib >= 2.68
+
 * Thu May 20 2021 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.58.alpha4
 - Rebuild for ICU 69
 
