@@ -28,6 +28,7 @@ Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
 Patch3:         qtwebkit-5.212.0-json.patch
 Patch4:         qtwebkit-bison37.patch
 Patch5:         qt5-qtwebkit-glib-2.68.patch
+Patch6:         qtwebkit-icu68.patch
 
 BuildRequires: make
 BuildRequires:  bison
@@ -246,6 +247,7 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 %changelog
 * Mon May 31 2021 Than Ngo <than@redhat.com> - 5.212.0-0.59.alpha4
 - fix FTBFS against glib >= 2.68
+- fix macro definitions TRUE,FALSE
 
 * Thu May 20 2021 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.58.alpha4
 - Rebuild for ICU 69
