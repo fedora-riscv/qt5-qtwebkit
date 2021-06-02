@@ -4,7 +4,7 @@
 
 %global _hardened_build 1
 
-%global prerel alpha3
+%global prerel alpha4
 %global prerel_tag -%{prerel}
 
 ## NOTE: Lots of files in various subdirectories have the same name (such as
@@ -16,7 +16,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.42.%{?prerel}%{?dist}
+Release:        0.59.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -25,8 +25,12 @@ Source0:        https://github.com/qtwebkit/qtwebkit/releases/download/%{qt_modu
 
 # Patch for new CMake policy CMP0071 to explicitly use old behaviour.
 Patch2:         qtwebkit-5.212.0_cmake_cmp0071.patch
-Patch3:         qtwebkit-missing-semicolons.patch
+Patch3:         qtwebkit-5.212.0-json.patch
+Patch4:         qtwebkit-bison37.patch
+Patch5:         qt5-qtwebkit-glib-2.68.patch
+Patch6:         qtwebkit-icu68.patch
 
+BuildRequires: make
 BuildRequires:  bison
 BuildRequires:  cmake
 BuildRequires:  flex
@@ -51,7 +55,8 @@ BuildRequires:  pkgconfig(gl)
 BuildRequires:  pkgconfig(gstreamer-gl-1.0)
 BuildRequires:  pkgconfig(gstreamer-mpegts-1.0)
 BuildRequires:  perl-generators
-BuildRequires:  python2
+BuildRequires:  perl(File::Copy)
+BuildRequires:  python3
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
 %if ! 0%{?bootstrap}
@@ -120,6 +125,12 @@ test -f Source/WebCore/Resources/textAreaResizeCorner.png
 
 
 %build
+# QT is known not to work properly with LTO at this point.  Some of the issues
+# are being worked on upstream and disabling LTO should be re-evaluated as
+# we update this change.  Until such time...
+# Disable LTO
+%define _lto_cflags %{nil}
+
 # The following changes of optflags ietc. are adapted from webkitgtk4 package, which
 # is mostly similar to this one...
 #
@@ -145,7 +156,8 @@ CXXFLAGS="${CXXFLAGS:-%optflags} -fpermissive" ; export CXXFLAGS ;
 %{?__global_ldflags:LDFLAGS="${LDFLAGS:-%__global_ldflags}" ; export LDFLAGS ;}
 # We cannot use default cmake macro here as it overwrites some settings queried
 # by qtwebkit cmake from qmake
-cmake -DPORT=Qt \
+%cmake \
+       -DPORT=Qt \
        -DCMAKE_BUILD_TYPE=Release \
        -DENABLE_TOOLS=OFF \
        -DCMAKE_C_FLAGS_RELEASE:STRING="-DNDEBUG" \
@@ -157,12 +169,10 @@ cmake -DPORT=Qt \
 %ifarch s390 s390x ppc %{power64}
        -DUSE_SYSTEM_MALLOC=ON \
 %endif
-%if 0%{?docs}
-       -DGENERATE_DOCUMENTATION=ON \
-%endif
-       .
+       %{?docs:-DGENERATE_DOCUMENTATION=ON} \
+       -DPYTHON_EXECUTABLE:PATH="%{__python3}"
 
-%make_build
+%cmake_build
 
 %if 0%{?docs}
 %make_build docs
@@ -170,7 +180,7 @@ cmake -DPORT=Qt \
 
 
 %install
-%make_install
+%cmake_install
 
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
@@ -235,6 +245,60 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Mon May 31 2021 Than Ngo <than@redhat.com> - 5.212.0-0.59.alpha4
+- fix FTBFS against glib >= 2.68
+- fix macro definitions TRUE,FALSE
+
+* Thu May 20 2021 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.58.alpha4
+- Rebuild for ICU 69
+
+* Mon May 10 2021 Jonathan Wakely <jwakely@redhat.com> - 5.212.0-0.57.alpha4
+- Rebuilt for removed libstdc++ symbols (#1937698)
+
+* Tue Mar 30 2021 Jonathan Wakely <jwakely@redhat.com> - 5.212.0-0.56.alpha4
+- Rebuilt for removed libstdc++ symbol (#1937698)
+
+* Wed Jan 27 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.55.alpha4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
+* Tue Nov 24 07:56:08 CET 2020 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.54.alpha4
+- Rebuild for qtbase with -no-reduce-relocations option
+
+* Fri Nov 20 13:29:15 CET 2020 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.53.alpha4
+- Rebuild (qt5)
+
+* Fri Sep 11 2020 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.52.alpha4
+- rebuild (qt5)
+
+* Thu Aug 27 2020 Than Ngo <than@redhat.com> - 5.212.0-0.51.alpha4
+- Fixed #1863719, FTBFS
+
+* Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.50.alpha4
+- Second attempt - Rebuilt for
+  https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Wed Jul 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.49.alpha4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
+
+* Wed Jul 01 2020 Jeff Law <law@redhat.com> - 5.212.0-0.48.alpha4
+- Disable LTO
+
+* Wed Jun 03 2020 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.47.alpha4
+- rebuild (python39)
+
+* Sun May 17 2020 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.46.alpha4
+- Rebuild for ICU 67
+
+* Sat May 16 2020 Pete Walter <pwalter@fedoraproject.org> - 5.212.0-0.45.alpha4
+- Rebuild for ICU 67
+
+* Fri Apr 24 2020 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.44.alpha4
+- 5.212.0-alpha4
+- use python3 (#1807535)
+
+* Sun Apr 05 2020 Rex Dieter <rdieter@fedoraproject.org> - 5.212.0-0.43.alpha3
+- rebuild (qt5)
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.42.alpha3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
