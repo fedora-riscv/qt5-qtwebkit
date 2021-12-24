@@ -141,10 +141,10 @@ test -f Source/WebCore/Resources/textAreaResizeCorner.png
 
 # Decrease debuginfo even on ix86 because of:
 # https://bugs.webkit.org/show_bug.cgi?id=140176
-%ifarch s390 s390x %{arm} %{ix86} ppc %{power64} %{mips}
+#%ifarch s390 s390x %{arm} %{ix86} ppc %{power64} %{mips}
 # Decrease debuginfo verbosity to reduce memory consumption even more
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
-%endif
+#%endif
 
 %ifarch ppc
 # Use linker flag -relax to get WebKit build under ppc(32) with JIT disabled
