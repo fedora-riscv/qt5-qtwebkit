@@ -18,7 +18,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.62.%{?prerel}%{?dist}
+Release:        0.63.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -248,6 +248,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Tue Mar 08 2022 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.63.alpha4
+- Rebuild (qt5)
+
 * Wed Feb 09 2022 Than Ngo <than@redhat.com> - 5.212.0-0.62.alpha4
 - disable _package_note_flags because it breaks qt5-qtwebkit
 
