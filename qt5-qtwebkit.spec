@@ -1,4 +1,6 @@
-%undefine _annotated_build
+# The additional linker flags break binary qt5-qtwebkits packages.
+# https://bugzilla.redhat.com/show_bug.cgi?id=2046931
+%undefine _package_note_flags
 
 %global qt_module qtwebkit
 
@@ -16,7 +18,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.59.%{?prerel}%{?dist}
+Release:        0.63.%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -130,6 +132,7 @@ test -f Source/WebCore/Resources/textAreaResizeCorner.png
 # we update this change.  Until such time...
 # Disable LTO
 %define _lto_cflags %{nil}
+%define _package_note_flags %{nil}
 
 # The following changes of optflags ietc. are adapted from webkitgtk4 package, which
 # is mostly similar to this one...
@@ -245,6 +248,19 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Tue Mar 08 2022 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.63.alpha4
+- Rebuild (qt5)
+
+* Wed Feb 09 2022 Than Ngo <than@redhat.com> - 5.212.0-0.62.alpha4
+- disable _package_note_flags because it breaks qt5-qtwebkit
+
+
+* Fri Jan 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.61.alpha4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
+* Fri Jul 23 2021 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.60.alpha4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Mon May 31 2021 Than Ngo <than@redhat.com> - 5.212.0-0.59.alpha4
 - fix FTBFS against glib >= 2.68
 - fix macro definitions TRUE,FALSE
