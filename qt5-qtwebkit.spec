@@ -2,6 +2,11 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=2046931
 %undefine _package_note_flags
 
+# Fix some epel9-next wierdness
+%global _debugsource_template %{nil}
+%global debug_package %{nil}
+%global debug_config %{nil}
+
 %global qt_module qtwebkit
 
 %global _hardened_build 1
@@ -18,7 +23,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.63.%{?prerel}%{?dist}
+Release:        0.63.%{?prerel}%{?dist}.1
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPLv2 and BSD
@@ -248,6 +253,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Fri Apr 29 2022 Troy Dawson <tdawson@redhat.com> - 5.212.0-0.63.alpha4.1
+- Disable debug packages.  It breaks x86_64 on epel9-next.
+
 * Tue Mar 08 2022 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.63.alpha4
 - Rebuild (qt5)
 
