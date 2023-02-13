@@ -18,7 +18,7 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.75%{?prerel}%{?dist}
+Release:        0.75%{?prerel}.rv64%{?dist}
 Summary:        Qt5 - QtWebKit components
 
 License:        LGPL-2.0-only AND BSD-3-Clause
@@ -35,6 +35,9 @@ Patch6:         qtwebkit-icu68.patch
 # Ruby 3.2 removes Object#=~ completely
 Patch7:         webkit-offlineasm-warnings-ruby27.patch
 Patch8:         qtwebkit-cstdint.patch
+
+# Enable RISC-V (riscv64)
+Patch10:        qtwebkit-5.212.0-alpha3-add-riscv.patch
 
 BuildRequires: make
 BuildRequires:  bison
@@ -148,7 +151,7 @@ test -f Source/WebCore/Resources/textAreaResizeCorner.png
 
 # Decrease debuginfo even on ix86 because of:
 # https://bugs.webkit.org/show_bug.cgi?id=140176
-%ifarch s390 s390x %{arm} %{ix86} ppc %{power64} %{mips}
+%ifarch s390 s390x %{arm} %{ix86} ppc %{power64} %{mips} riscv64
 # Decrease debuginfo verbosity to reduce memory consumption even more
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
@@ -170,8 +173,11 @@ CXXFLAGS="${CXXFLAGS:-%optflags} -fpermissive" ; export CXXFLAGS ;
        -DCMAKE_C_FLAGS_RELEASE:STRING="-DNDEBUG" \
        -DCMAKE_CXX_FLAGS_RELEASE:STRING="-DNDEBUG" \
        -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
-%ifarch s390 s390x ppc %{power64}
+%ifarch s390 s390x ppc %{power64} riscv64
        -DENABLE_JIT=OFF \
+%endif
+%ifarch riscv64
+       -DCMAKE_CXX_FLAGS=-pthread \
 %endif
 %ifarch s390 s390x ppc %{power64}
        -DUSE_SYSTEM_MALLOC=ON \
@@ -252,6 +258,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Sun May 14 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 5.212.0-0.75alpha4.rv64
+- Add riscv64 support.
+
 * Wed Apr 12 2023 Jan Grulich <jgrulich@redhat.com> - 5.212.0-0.75alpha4
 - Rebuild (qt5)
 
