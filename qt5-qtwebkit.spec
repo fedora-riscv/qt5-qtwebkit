@@ -18,10 +18,10 @@
 
 Name:           qt5-%{qt_module}
 Version:        5.212.0
-Release:        0.73%{?prerel}%{?dist}
+Release:        0.74%{?prerel}%{?dist}
 Summary:        Qt5 - QtWebKit components
 
-License:        LGPLv2 and BSD
+License:        LGPL-2.0-only AND BSD-3-Clause
 URL:            https://github.com/qtwebkit/qtwebkit
 Source0:        https://github.com/qtwebkit/qtwebkit/releases/download/%{qt_module}-%{version}%{?prerel_tag}/%{qt_module}-%{version}%{?prerel_tag}.tar.xz
 
@@ -251,6 +251,9 @@ test -z "$(pkg-config --cflags Qt5WebKit | grep Qt5WebKit)"
 
 
 %changelog
+* Mon Feb 20 2023 Than Ngo <than@redhat.com> - 5.212.0-0.74alpha4
+- migrated to SPDX license
+
 * Fri Jan 20 2023 Fedora Release Engineering <releng@fedoraproject.org> - 5.212.0-0.73alpha4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
 
